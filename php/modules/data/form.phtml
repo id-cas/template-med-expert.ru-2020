@@ -1,0 +1,38 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+
+	$action = $variables[ "action" ];
+	$form = $this->parseData( $variables[ "form" ] );
+	$id = isset( $form[ "form_id" ] ) ? "js--form-" . $form[ "form_id" ] : false;
+	$groups = isset( $form[ "groups" ] ) ? $form[ "groups" ] : $form[ "group" ];
+}?>
+<form <?php if ( $id ): ?>id="<?php echo $id; ?>" name="<?php echo $id; ?>"<?php endif; ?> class="form webform" enctype="multipart/form-data" method="post" action="<?php echo $action; ?>">
+    <?php if ( count( $groups ) === 1 ): ?>
+        <?php foreach ( $groups[ 0 ][ "field" ] as $field ): ?>
+            <?php echo $this->render( $field, "modules/data/form_field" ); ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <?php foreach ( $groups as $group ): ?>
+            <?php echo $this->render( $group, "modules/data/form_group" ); ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    <?php if ( isset( $form[ "items" ] ) ): ?>
+        <?php echo $this->render( $form, "modules/data/form_hidden" ); ?>
+    <?php endif; ?>
+
+	<?php if(isset($scope['G-RECAPTCHA'])): ?>
+		<?php echo $this->render( $scope, "modules/data/form_field_recaptcha" ); ?>
+	<?php else: ?>
+		<?php echo $this->render( $this->macros( "system", "captcha" ), "utils/captcha" ); ?>
+	<?php endif; ?>
+
+    <div class="form__element">
+        <?php echo $this->render( array( 
+            "type" => "submit",
+            "text" => "Отправить",
+            "class" => array( "M", "primary" )
+         ), "utils/button" ); ?>
+    </div>
+</form>

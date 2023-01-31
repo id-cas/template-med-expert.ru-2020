@@ -1,0 +1,10 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	if(!in_array($variables['page']['alt_name'], ['specialisty', 'notfound'])) {
+		echo $this->render($this->macros('custom', 'navibar'), 'utils/breadcrumbs');
+	}
+} ?>
+
+<?php echo $this->render($variables, 'layout/'. $variables['module'] . '/' . $variables['method']); ?>

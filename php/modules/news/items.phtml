@@ -1,0 +1,14 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php if(isset($variables['mode']) && $variables['mode'] === 'placeholder'): ?>
+	<?php for($i = 0; $i < 6; $i++): ?>
+		<?= $this->render(['mode' => 'placeholder'], 'modules/news/item') ?>
+	<?php endfor; ?>
+
+	<?php return; ?>
+<?php endif; ?>
+
+<?php foreach($variables as $item): ?>
+	<?= $this->render($item, 'modules/news/item') ?>
+<?php endforeach; ?>

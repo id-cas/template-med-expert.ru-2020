@@ -1,0 +1,38 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$tabs = isset($variables['items']) ? $variables['items'] : [];
+
+	$classes = isset($variables['classes']) ? $variables['classes'] : [];
+	$classes = implode(' ', $classes);
+
+	$uniqId = uniqid();
+} ?>
+
+<?php if(count($tabs) > 0): ?>
+	<div class="js--tabs <?= $classes ?>">
+		<ul class="tabs__special-offers--tabs">
+			<?php foreach($tabs as $index => $tab): ?>
+				<li><a href="#tabs-<?= $uniqId ?>-<?= $index ?>"><?= $tab['name'] ?></a></li>
+			<?php endforeach; ?>
+		</ul>
+
+		<?php foreach($tabs as $index => $tab): ?>
+			<div id="tabs-<?= $uniqId ?>-<?= $index ?>">
+				<?php {
+					$commonLink =  isset($tab['link']) ? $tab['link'] : '';
+					if(is_array($commonLink) && isset($commonLink['name']) && isset($commonLink['url'])){
+						if(isset($commonLink['index']) && $commonLink['index'] === true){
+							echo '<div class="tabs__common-link"><a href="'. $commonLink['url']. '">'. $commonLink['name']. '</a></div>';
+						}
+						else {
+							echo '<div class="tabs__common-link"><a href="#" onclick="event.preventDefault(); window.location=\''. $commonLink['url']. '\'; return false;">'. $commonLink['name']. '</a></div>';
+						}
+					}
+				} ?>
+
+				<?= $tab['content'] ?>
+			</div>
+		<?php endforeach; ?>
+	</div>
+<?php endif; ?>

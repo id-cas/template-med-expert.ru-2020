@@ -1,0 +1,21 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $variables = $this->parseData( $variables ); ?>
+<?php
+$rate_voters = $variables[ "rate" ][ "voters" ];
+$rate_sum = $variables[ "rate" ][ "sum" ];
+$rate_value = $variables[ "rate" ][ "value" ];
+$rate_floor = floor( $rate_value );
+?>
+<div id="js--rating-<?php echo $variables["id"]; ?>" class="rating">
+        <ul class="rating__items">
+            <?php for ( $i = 5; $i > 0; $i-- ): ?>
+                <li class="rating__item">
+                    <a class="rating__link js--onclick-rate-page" data-rate="<?php echo $i; ?>" data-page-id="<?php echo $variables[ "id" ]; ?>" title="<?php echo $i; ?>"><span class="spr spr--jug-<?php echo ( $rate_floor >= $i ? "full" : "empty" );?>"></a>
+                </li>
+            <?php endfor; ?>
+        </ul>
+        <small id="js--rating-status-<?php echo $variables["id"]; ?>" class="rating__status cell cell--middle cell--X12 color-gray">
+            <?php if ( $rate_voters > 0 ): ?><?php echo $this->translate( "l-rate-voters" ) . ": " . $rate_voters; ?><?php endif; ?>
+        </small>
+</div>

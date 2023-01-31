@@ -1,0 +1,152 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	/** Инициализация глобальных переменных для всех шаблонов */
+	$this->prepareScopeVars($variables);
+
+
+	/** ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ >>> */
+	// Настройки сайта
+	try{
+		$cmsController = cmsController::getInstance();
+		$umiSettings = $cmsController->getModule('umiSettings');
+		$umiObjectsCollection = umiObjectsCollection::getInstance();
+		$umiHierarchy = umiHierarchy::getInstance();
+
+		$siteSettingsId = $umiSettings->getIdByCustomId('settings');
+		if(!empty($siteSettingsId)){
+			$siteSettings = $umiObjectsCollection->getObject($siteSettingsId);
+
+			if(!($siteSettings instanceof umiObject)){
+				throw new publicException('There is no setting in DB');
+			}
+
+			// Сделаем настройки глобальными для всего шаблона
+			$this->setScopeVars(['SITE_SETTINGS' => $siteSettings]);
+		}
+	}
+	catch (Exception $e){
+	}
+
+	// Google ReCaptcha
+	$captcha = $this->macros('system', 'captcha');
+	if(isset($captcha['recaptcha-url'])){
+		$this->setScopeVars(['G-RECAPTCHA' => [
+			'URL' => $captcha['recaptcha-url'],
+			'KEY' => $captcha['recaptcha-sitekey'],
+			'CLASS' => $captcha['recaptcha-class'],
+		]]);
+	}
+
+	$variables = $this->getScopeVars();
+	/** <<< ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ */
+
+
+
+	/** Выбор варианта шаблонизации */
+	// minHTML
+	if($variables['module'] === 'ajax' && $variables['method'] === 'html') {
+		try {
+			$asyncRes = $this->macros('ajax', 'html', []);
+			$templatePath = $asyncRes['path'];
+			$reqParams = $asyncRes['params'];
+
+			// Получим хэш параметров запроса
+			// $paramsHash = sha1(json_encode($reqParams));
+			$paramsHash = http_build_query($reqParams);
+
+			// TODO: отлючить кэширование для форм (обратная связь, авторизация, комментарии)
+			$noCache = false;
+			if(in_array($templatePath, [
+				'ajax/webforms/add',		// обратная связь/сообщение об ошибке
+				'ajax/banners/insert', 		// показ баннеров
+			])){
+				$noCache = true;
+			}
+
+			if($variables['isDebug'] || $noCache){
+				$html = $this->render($variables, $templatePath);
+				$html = $this->macros('custom', 'minHTML', [$html]);
+				echo $html;
+
+				return;
+			}
+
+
+			$dynamicCachePath = preg_replace('/^ajax\//', 'ajax/html/', $templatePath);
+
+			if($html = getHtmlCache($paramsHash, "{$dynamicCachePath}", 86400)){
+				$html = $this->macros('custom', 'minHTML', [$html]);
+				echo $html;
+
+				return;
+			}
+
+			$html = $this->render($variables, $templatePath);
+			$html = $this->macros('custom', 'minHTML', [$html]);
+			echo putHtmlCache($html, $paramsHash, "{$dynamicCachePath}", 86400);
+
+			return;
+		}
+		catch (Exception $e) {
+			// ToDo: make exception splashscreen
+			echo sprintf( file_get_contents( __DIR__ . '/exception.phtml' ), $e->getMessage() );
+			return;
+		}
+		return;
+
+	}
+
+
+	$settings = $variables['SITE_SETTINGS'];
+	$manifestIsActive = $settings->getValue('manifest_is_active');
+
+	// Проверяем, возможно это был запрос на манифест, тогда подготовим соответсвующий файл
+	preg_match('/\/manifest\/?$/', $variables['request-uri'], $isManifest);
+
+	if($isManifest && !empty($manifestIsActive) && $manifestIsActive == 1){
+
+		// На этапе отладки - отдаем как есть
+		if($variables['isDebug'] || $noCache){
+			echo $this->render($variables, 'main/manifest.json');
+			return;
+		}
+
+
+		$dynamicCachePath = preg_replace('/^async\//', 'async/html/', $templatePath);
+
+		if($json = getHtmlCache('manifest', 'json', 86400)){
+			echo $json;
+			return;
+		}
+
+		$json = $this->render($variables, 'main/manifest.json');
+		echo putHtmlCache($json, 'manifest', 'json', 86400);
+
+		return;
+	}
+} ?>
+
+
+<!doctype html>
+<html lang="ru-RU">
+<?php {
+    try {
+//        echo $this->render($variables, 'main/head');
+//        echo $this->render($variables, 'default_common');
+
+		if($variables['isDebug']){
+			echo $this->render($variables, 'main/head');
+			echo $this->render($variables, 'default_common');
+		}
+		else {
+			echo $this->macros('custom', 'minHTML', [$this->render($variables, 'main/head')]);
+			echo $this->macros('custom', 'minHTML', [$this->render($variables, 'default_common')]);
+		}
+    }
+    catch ( Exception $e ) {
+        // ToDo: make exception splashscreen
+        echo sprintf( file_get_contents( __DIR__ . '/exception.phtml' ), $e->getMessage() );
+    }
+}?>
+</html>

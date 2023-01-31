@@ -1,0 +1,15 @@
+<?php /** @var umiTemplaterPHP $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+    $search_string = isset($_REQUEST["search_string"]) ? $_REQUEST["search_string"] : "";
+    $class = isset($variables["class"]) ? $variables["class"] : "";
+    $placeholder = isset($variables["placeholder"]) ? $variables["placeholder"] : $this->translate("l-search");
+}
+?>
+<form class="search <?= $class; ?>" action="/search/search_do/" method="get" enctype="multipart/form-data">
+    <div class="search__input-wrapper">
+        <input class="search__input" type="text" name="search_string" placeholder="<?= $placeholder; ?>" value="<?= $search_string; ?>"/>
+    </div>
+    <button class="search__btn" type="submit"><?= $this->translate("l-search-do"); ?></button>
+</form>

@@ -1,0 +1,12 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$pageGUID = umiObjectTypesCollection::getInstance()->getType($variables['page']['type_id'])->getGUID();
+
+	if($pageGUID === 'catalog-object-specialist'){
+		echo $this->render($variables, 'modules/catalog/specialist_object');
+	}
+	else {
+		echo $this->macros('content', 'redirect', ['/']);
+	}
+} ?>

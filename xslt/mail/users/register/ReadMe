@@ -1,0 +1,6 @@
+Вырезал строку <!DOCTYPE xsl:stylesheet SYSTEM "ulang://i18n/constants.dtd:file">
+т.к. при выполнении отправки на email генерировалиcь Warnings о невозможности подключения этого файла.
+
+Подробнее можно почитать здесь http://wiki.umisoft.ru/%D0%9F%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB_ulang_%D0%B8_ENTITY,_%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D1%8F%D0%B7%D1%8B%D1%87%D0%BD%D0%BE%D1%81%D1%82%D1%8C
+
+Также ворнинги можно просто отключить в конфиге сайта.

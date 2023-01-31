@@ -1,0 +1,23 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<div class="container">
+	<div class="row">
+		<div class="cell cell--X12 cell--X-text-left">
+			<h1 class="cabinet__header"><?= $variables['page']['header']; ?></h1>
+			<?php if(isset($variables['data']['result']) && isset($variables['data']['state'])): ?>
+				<?php $state = ($variables['data']['state'] === 'errors') ? 'error' : 'success' ?>
+
+				<?php if(isset($variables['data']['result']) && is_array($variables['data']['result'])):?>
+					<?php foreach($variables['data']['result'] as $resultText): ?>
+						<div class="cabinet-result cabinet-result--<?= $state ?>">
+							<?= $resultText ?>
+						</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+
+			<?php endif; ?>
+
+			<?= $this->render($variables, 'layout/cabinet/'. $variables["method"]); ?>
+		</div>
+	</div>
+</div>

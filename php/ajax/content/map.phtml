@@ -1,0 +1,163 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+//	$pageId = (int) $variables['page_id'];
+
+	$uniqId = uniqid();
+} ?>
+
+<?php {
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+
+	// Телефонные номера call-центра
+	$callCenterPhone = $settings->getValue('map_call_center_phone');
+
+
+	// Выберем все клиники и рассортируем их по группам
+	$clinics = $this->parseData($this->macros('content', 'menu', [null, 1, 'kontakty'], ['address', 'phones', 'coordinates', 'clinic_specialization', 'email']));
+
+	if(isset($clinics['items'])){
+		$umiObjectCollection = umiObjectsCollection::getInstance();
+
+		$clinicsForMobileMenu = [];
+		$clinicsBySpecialization = [];
+		foreach($clinics['items'] as $clinic){
+			if(!isset($clinic['properties'])){
+				continue;
+			}
+
+			if(!isset($clinic['properties']['clinic_specialization'])){
+				continue;
+			}
+
+//			$clinicsForMobileMenu[$clinic['id']] = [
+//				'name' => $clinic['name'] ?? '',
+//				'address' => $clinic['properties']['address'] ?? '',
+//				'coordinates' => $clinic['properties']['coordinates'] ?? '',
+//				'phone' => $clinic['properties']['phone'] ?? '',
+//				'phone-format' => $this->phoneFormat($clinic['properties']['phone']) ?? '',
+//			];
+
+			$clinicsForMobileMenu[$clinic['id']] = [
+				'name' => $clinic['name'] ?? '',
+				'address' => $clinic['properties']['address'] ?? '',
+				'coordinates' => $clinic['properties']['coordinates'] ?? '',
+			];
+
+			if(isset($variables['selected_id']) && $variables['selected_id'] === $clinic['id']){
+				$clinicsForMobileMenu[$clinic['id']]['selected'] = true;
+			}
+
+			$phones = explode(',', $clinic['properties']['phones']);
+			if(count($phones)){
+				foreach($phones as $phone){
+					$clinicsForMobileMenu[$clinic['id']]['phones'][] = [
+						'num' => $phone,
+						'format' => $this->phoneFormat($phone),
+					];
+				}
+			}
+			else {
+				$clinicsForMobileMenu[$clinic['id']]['phones'] = [];
+			}
+
+			foreach($clinic['properties']['clinic_specialization'] as $specId) {
+				$spec = $umiObjectCollection->getById($specId);
+				if(!($spec instanceof umiObject)){
+					continue;
+				}
+
+				if(!isset($clinicsBySpecialization[$specId])){
+					$clinicsBySpecialization[$specId] = [
+						'name' => $spec->getName(),
+						'clinics' => [],
+						'main-office' => (mb_strtolower($spec->getName()) === 'главный офис'),
+					];
+				}
+
+				$clinicsBySpecialization[$specId]['clinics'][] = [
+					'id' => $clinic['id'],
+					'name' => $clinic['name'] ?? '',
+					'address' => $clinic['properties']['address'] ?? '',
+					'coordinates' => $clinic['properties']['coordinates'] ?? '',
+					'phone' => $clinic['properties']['phone'] ?? '',
+					'email' => $clinic['properties']['email'] ?? '',
+				];
+			}
+		}
+
+		// $this->dump($clinicsBySpecialization);
+	}
+
+} ?>
+
+<div class="map-wrap">
+	<div class="map" id="map-<?= $uniqId ?>">
+	</div>
+	<div class="select-wrap map-select-mob">
+		<select>
+			<?php foreach($clinicsForMobileMenu as $id => $data): ?>
+				<option value="<?= $id ?>"><?= $data['name'] ?></option>
+			<?php endforeach ?>
+		</select>
+	</div>
+	<div class="container">
+		<div class="inner">
+			<div class="clinics-map-lists">
+
+				<?php foreach($clinicsBySpecialization as $specId => $data): ?>
+					<?php {
+						if($data['main-office'] === true){
+							$mainOfficeData = $data;
+							continue;
+						}
+					} ?>
+
+					<div class="clinics-map-list">
+						<div class="clinics-map-list-title">
+								<span><?= $data['name'] ?></span>
+							<img src="/resources/images/chevron-down.svg" alt="ico">
+						</div>
+						<ul>
+							<?php foreach($data['clinics'] as $clinic): ?>
+								<li data-map="<?= $clinic['id'] ?>"><?= $clinic['name'] ?></li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				<?php endforeach; ?>
+
+
+
+			</div>
+			<div class="clinics-map-call-center">
+				<p>Колл-центр: <a class="color-white" href="tel:<?= $callCenterPhone ?>"><?= $this->phoneFormat($callCenterPhone) ?></a></p>
+			</div>
+			<?php if(isset($mainOfficeData)): ?>
+				<div class="clinics-map-main-office">
+					<p>
+						<b><?= $mainOfficeData['name'] ?></b><br/>
+						<?php if(isset($mainOfficeData['clinics']) && isset($mainOfficeData['clinics'][0])): ?>
+							<?php $mainOffice = $mainOfficeData['clinics'][0]; ?>
+
+							<?php if(!empty($mainOffice['address'])): ?><?= $mainOffice['address'] ?><br/><?php endif; ?>
+							<?php if(!empty($mainOffice['phone'])): ?><a class="color-white" href="tel:<?= $mainOffice['phone'] ?>">тел. <?= $this->phoneFormat($mainOffice['phone']) ?></a><br/><?php endif; ?>
+							<?php if(!empty($mainOffice['email'])): ?><?= $mainOffice['email'] ?><?php endif; ?>
+						<?php endif; ?>
+					</p>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyDCxdOBOXoVuQ34cLl2Co46c1HUkezB7ts" async=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js" async=""></script>
+
+<script type="text/javascript">
+	var mapClinics = <?= json_encode($clinicsForMobileMenu, JSON_UNESCAPED_UNICODE) ?>;
+	document.dispatchEvent(new CustomEvent('gmap-loaded', {
+		detail: { elem: document.getElementById('map-<?= $uniqId ?>') }
+	}));
+</script>

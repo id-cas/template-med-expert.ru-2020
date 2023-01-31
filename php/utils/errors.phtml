@@ -1,0 +1,32 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+$variables = $this->parseData( $variables );
+$scope = $this->getScopeVars();
+?>
+<?php if ( isset( $variables[ "items" ] ) ): ?>
+    <div id="js--uiErrors" class="ui-errors">
+        <div class="container">
+            <div class="row row--align table">
+                <div class="cell cell--X12 cell--middle table__cell">
+                    <h3><?php echo $this->translate( "h-error" ); ?></h3>
+                    <ul class="data">
+                        <?php foreach ( $variables[ "items" ] as $item ): ?>
+                            <li class="data__item"><?php echo $item[ "message" ]; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <div class="cell cell--middle table__cell">
+                    <?php echo $this->render( array(
+                        "event" => "js--onclick-close",
+                        "data" => array( "target" => "#js--uiErrors" ),
+                        "type" => "button",
+                        "title" => $this->translate( "l-close" ),
+                        "class" => array( "wrapper" ),
+                        "sprite" => array( "before", "spr spr--times-big" )
+                    ), "utils/button" ); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

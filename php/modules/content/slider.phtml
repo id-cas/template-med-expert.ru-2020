@@ -1,0 +1,76 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $this->parseData($variables);
+	$uniqId = uniqid();
+
+	$items = isset($variables['items']) ? $variables['items'] : [];
+} ?>
+
+<?php if(count($items) > 0): ?>
+	<div id="swiper-<?= $uniqId ?>" class="hero-slider">
+		<div class="swiper-wrapper">
+
+			<?php foreach ($items as $item): ?>
+				<?php {
+					$img = $this->render([
+						'class' => 'responsive',
+						'src' => $item['properties']['header_pic' ]['src'],
+						'alt' => $item['name'],
+						'width' => 1920,
+						'height' => 470,
+						'return-src' => true,
+					], 'utils/thumb');
+					$img = trim($img);
+				} ?>
+
+				<div class="swiper-slide" style="background-image: url(<?= $img ?>);">
+					<div class="hero-slider-content">
+						<div class="hero-slider-title"><?= $item['name'] ?></div>
+						<?php if(isset($item['properties']['button_text']) && !empty($item['properties']['button_text'])): ?>
+							<p class="hero-slider-info">
+								<?php if(!empty($item['properties']['button_link'])): ?>
+									<a href="#" onclick="event.preventDefault(); window.open('<?= $item['properties']['button_link'] ?>', '_blank'); return false;"><?= $item['properties']['button_text'] ?></a>
+								<?php else: ?>
+									<?= $item['properties']['button_text'] ?>
+								<?php endif; ?>
+							</p>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+
+		</div>
+
+		<div id="swiper-pagination-<?= $uniqId ?>" class="swiper-pagination"></div>
+
+		<div class="slider-arrow prev">
+			<img src="/resources/images/chevron-left.svg" alt="ico">
+		</div>
+		<div class="slider-arrow next">
+			<img src="/resources/images/chevron-right.svg" alt="ico">
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var heroSlider = new Swiper('#swiper-<?= $uniqId ?>', {
+			pagination: {
+				el: '#swiper-pagination-<?= $uniqId ?>',
+				clickable: true
+			},
+			autoplay: {
+				delay: 5000
+			},
+			effect: 'fade',
+			simulateTouch: false,
+			breakpoints: {
+				992: {
+					navigation: {
+						nextEl: '.next',
+						prevEl: '.prev'
+					}
+				}
+			}
+		});
+	</script>
+<?php endif; ?>

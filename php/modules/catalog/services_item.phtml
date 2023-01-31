@@ -1,0 +1,65 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$variables = $this->parseData($variables);
+	// $this->dump($variables);
+
+
+
+	if(isset($variables['is_subitem']) && $variables['is_subitem'] === true){
+		// Для результатов поиска: данные найдены во вложенном элементе
+		$pageId = $this->getParentByPageId($variables['id']);
+	}
+	else {
+		// Стандартная выдача в каталоге
+		$pageId = $variables['id'];
+	}
+
+	// Для результатов поиска: всегда развернутые списки
+	$isActive = (isset($variables['is_search']) && $variables['is_search'] === true) ? true : false;
+
+
+	$page = $this->getPageById($pageId);
+	list($h1, $descr, $btnSignUpHidden, $landingLink) = $this->properties($page, ['h1', 'descr', 'hide_btn_signup', 'landing_link']);
+
+	$h1 = preg_replace('/[ё]/u', 'е', $h1);
+	$h1 = preg_replace('/[Ё]/u', 'Е', $h1);
+
+	$descr = preg_replace('/[ё]/u', 'е', $descr);
+	$descr = preg_replace('/[Ё]/u', 'Е', $descr);
+
+	// $this->dump($variables['context']);
+} ?>
+
+<div class="prices-item">
+	<?php if(!!empty($landingLink)): ?>
+		<div class="prices-item-top">
+			<div class="prices-item-title"><?= $h1 ?></div>
+			<div class="prices-item-value">&nbsp;</div>
+			<?php if(!(!empty($btnSignUpHidden) && !!$btnSignUpHidden)): ?>
+				<a href="#" class="border-btn" onclick="event.preventDefault(); window.open('https://mdx39.ru/', '_blank');"><span>Записаться</span></a>
+			<?php endif; ?>
+			<div class="prices-item-arrow<?php if($isActive): ?> active<?php endif; ?>">
+				<img src="/resources/images/chevron-down.svg" alt="ico">
+			</div>
+		</div>
+		<div class="prices-item-dropdown"<?php if($isActive): ?> style="display: block;"<?php endif; ?>>
+			<div class="inner-small">
+				<?php if(!empty($descr)): ?>
+					<div class="prices-detail-descr prices-detail-descr-group mb-4"><?= $this->parseWysiwig($descr, $this) ?></div>
+				<?php endif; ?>
+				<?php // Service item details ?>
+				<div class="lazy-html lazy-html--init" data-path="catalog/service_item_details" data-params="<?= $this->htmlParams(['page_id' => $pageId]) ?>"></div>
+			</div>
+		</div>
+	<?php else: ?>
+		<a href="<?= $landingLink ?>" class="prices-item-top">
+			<div class="prices-item-title"><?= $h1 ?></div>
+			<div class="prices-item-value">&nbsp;</div>
+			<div class="prices-item-arrow">
+				<img src="/resources/images/chevron-down.svg" alt="ico">
+			</div>
+		</a>
+	<?php endif; ?>
+</div>

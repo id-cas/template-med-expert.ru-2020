@@ -1,0 +1,145 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+    $id = isset( $variables[ "id" ] ) ? $variables[ "id" ] : false;
+    $text = isset( $variables[ "text" ] ) ? $variables[ "text" ] : false;
+    $type = isset( $variables[ "type" ] ) ? $variables[ "type" ] : "button";
+    $link = isset( $variables[ "link" ] ) ? $variables[ "link" ] : "#";
+    $title = isset( $variables[ "title" ] ) ? $variables[ "title" ] : false;
+    $target = isset( $variables[ "target" ] ) ? $variables[ "target" ] : false;
+    $disabled = isset( $variables[ "disabled" ] ) ? $variables[ "disabled" ] : false;
+    $data = "";
+    $btn_class_name = "btn";
+    $text_class_name = "btn__text";
+    $sprite_class_name = "btn__image";
+    $icon_class_name = "btn__icon";
+    $prepend = "";
+    $append = "";
+
+    // Add mods to classnames
+    if ( isset( $variables[ "class" ] ) && is_array( $variables[ "class" ] ) ) {
+        foreach ( $variables[ "class" ] as $entry ) {
+            $btn_class_name.= " btn--" . $entry;
+            $text_class_name.= " btn--" . $entry . "__text";
+            $sprite_class_name.= " btn--" . $entry . "__image";
+        }
+    }
+
+
+    // "js--" event classname
+    if ( isset( $variables[ "event" ] ) ) {
+        $btn_class_name.= " " . $variables[ "event" ];
+    }
+
+
+    // Paste code to the begining of button
+    if ( isset( $variables[ "prepend" ] ) && is_array( $variables[ "prepend" ] ) ) {
+        foreach ( $variables[ "prepend" ] as $entry ) {
+            $prepend.= $entry;
+        }
+    }
+
+
+    // Paste code to the end of button
+    if ( isset( $variables[ "append" ] ) && is_array( $variables[ "append" ] ) ) {
+        foreach ( $variables[ "append" ] as $entry ) {
+            $append.= $entry;
+        }
+    }
+
+
+    // Data attribute
+    if ( isset( $variables[ "data" ] ) && is_array( $variables[ "data" ] ) ) {
+        foreach ( $variables[ "data" ] as $key => $value ) {
+            $data.= "data-" . $key . "=\"" . $value . "\"";
+        }
+    }
+
+
+    // Text span
+    $text_inline = "";
+
+    if ( $text ) {
+        $text_inline = "<span class=\"{$text_class_name}\">{$text}</span>";
+    }
+
+
+    // Sprite
+    $sprite_inline = "";
+
+    // Sprite is before or after text node
+    $sprite_is_before = true;
+
+    if ( isset( $variables[ "sprite" ] ) ) {
+        if ( is_array( $variables[ "sprite" ] ) ) {
+            if ( $variables[ "sprite" ][ 0 ] === "before" ) {
+                $sprite_is_before = true;
+            }
+            elseif ( $variables[ "sprite" ][ 0 ] === "after" ) {
+                $sprite_is_before = false;
+            }
+
+            $sprite_inline = "<span class=\"" . $sprite_class_name . "   " . $variables[ "sprite" ][ 1 ] . "\"></span>";
+        }
+    }
+
+
+    // Icon
+    $icon_inline = "";
+
+    // Icon is before or after text node
+    $icon_is_before = true;
+
+    if ( isset( $variables[ "icon" ] ) ) {
+        if ( is_array( $variables[ "icon" ] ) ) {
+            if ( $variables[ "icon" ][ 0 ] === "before" ) {
+                $icon_is_before = true;
+            }
+            elseif ( $variables[ "icon" ][ 0 ] === "after" ) {
+                $icon_is_before = false;
+            }
+
+            $icon_inline = "<i class=\"" . $icon_class_name . "   " . $variables[ "icon" ][ 1 ] . "\"></i>";
+        }
+    }
+}
+
+if ( $type === "button" || $type === "submit" || $type === "reset" ) {
+    echo "<button";
+        if ( $id ) echo " id=\"{$id}\"";
+        echo " class=\"{$btn_class_name}\"";
+        echo " type=\"{$type}\"";
+        if ( $data ) echo " {$data}";
+        if ( $title ) echo " title=\"{$title}\"";
+        if ( $disabled === true ) echo " disabled=\"{$disabled}\"";
+    echo ">";
+        echo $prepend;
+        if ( $sprite_is_before ) echo $sprite_inline;
+        if ( $icon_is_before ) echo $icon_inline;
+        echo $text_inline;
+        if ( ! $icon_is_before ) echo $icon_inline;
+        if ( ! $sprite_is_before ) echo $sprite_inline;
+        echo $append;
+    echo "</button>";
+}
+else {
+    echo "<a";
+        if ( $id ) echo " id=\"{$id}\"";
+        echo " class=\"{$btn_class_name}\"";
+        echo " href=\"{$link}\"";
+        if ( $data ) echo " {$data}";
+        if ( $title ) echo " title=\"{$title}\"";
+        if ( $target ) echo " target=\"{$target}\"";
+    echo ">";
+        echo $prepend;
+        if ( $sprite_is_before ) echo $sprite_inline;
+        if ( $icon_is_before ) echo $icon_inline;
+        echo $text_inline;
+        if ( ! $icon_is_before ) echo $icon_inline;
+        if ( ! $sprite_is_before ) echo $sprite_inline;
+        echo $append;
+    echo "</a>";
+}
+
+?>

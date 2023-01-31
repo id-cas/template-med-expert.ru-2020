@@ -1,0 +1,24 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $variables = $this->parseData( $variables ); ?>
+
+<?php if(isset($variables['mode']) && $variables['mode'] === 'placeholder'): ?>
+	<div class="container">
+		<div class="row justify-content-center">
+			<?= $this->render(['mode' => 'placeholder'], 'modules/news/items'); ?>
+		</div>
+		<a href="#" onclick="event.preventDefault(); return false;" class="border-btn"><span>Все материалы</span></a>
+	</div>
+
+	<?php return; ?>
+<?php endif; ?>
+
+
+<?php if(isset($variables['items']) && count($variables['items'])): ?>
+	<div class="container">
+		<div class="row justify-content-center">
+			<?= $this->render($variables['items'], 'modules/news/items'); ?>
+		</div>
+		<a href="#" onclick="event.preventDefault(); window.location.href = '<?= $variables['archive_link'] ?>'; return false;" class="border-btn"><span>Все материалы</span></a>
+	</div>
+<?php endif; ?>

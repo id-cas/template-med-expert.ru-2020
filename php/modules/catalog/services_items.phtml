@@ -1,0 +1,36 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$variables = $this->parseData($variables);
+	$items = (isset($variables['items']) && count($variables['items'])) ? $variables['items'] : [];
+} ?>
+
+<?php $prevParentPageId = 0; ?>
+<?php foreach($items as $item): ?>
+	<?php {
+		$item['is_search'] = (isset($variables['is_search']) && $variables['is_search'] === true) ? true : false;
+
+		/** Конечная категория с ценой (Случай для результатов ПОИСКА) */
+		if(isset($item['type']) && isset($item['type']['id']) && $item['type']['id'] == 56){
+			// Для результатов поиска: открывать, если было найдено внутри наименования услуги
+			$item['is_subitem'] = true;
+			$parentPageId = $this->getParentByPageId($item['id']);
+
+			if($prevParentPageId == $parentPageId){
+				continue;
+			}
+
+			$prevParentPageId = $parentPageId;
+		}
+		else {
+			if($prevParentPageId == $item['id']){
+				continue;
+			}
+
+			$prevParentPageId = $item['id'];
+		}
+	} ?>
+
+	<?php echo $this->render($item, 'modules/catalog/services_item') ?>
+<?php endforeach; ?>

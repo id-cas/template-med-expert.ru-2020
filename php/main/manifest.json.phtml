@@ -1,0 +1,54 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$settings = $variables['SITE_SETTINGS'];
+
+	$host = cmsController::getInstance()->getCurrentDomain()->getHost();
+	$host = getServerProtocol(). "://{$host}";
+
+	$name = $settings->getValue('manifest_name');
+	$shortName = $settings->getValue('manifest_short_name');
+	$themeColor = $settings->getValue('manifest_theme_color');
+	$display = $settings->getValue('manifest_display');
+	$description = $settings->getValue('manifest_description');
+	$scope = $settings->getValue('manifest_scope');
+	$startUrl = $settings->getValue('manifest_start_url');
+	$startUrl = $settings->getValue('manifest_start_url');
+	$icon = $settings->getValue('manifest_icon');
+	$iconsSizes = $settings->getValue('manifest_icons_sizes');
+
+
+	$icons = [];
+	if($srcBiggestIconPath = $icon->getFilePath()){
+		$mimeType = $icon->getMimeType();
+
+		$iconSizes = explode(',', trim($iconsSizes));
+		foreach($iconSizes as $iconSize){
+			list($width, $height) = explode('x', $iconSize);
+
+			$resized = $this->macros('custom', 'imageToFrame', [$srcBiggestIconPath, $width, $height, 100, 'transparent', false, 16, 16]);
+
+			$icons[] = [
+				'src' => "{$host}{$resized['src']}",
+				'sizes' => $iconSize,
+				'type' => $mimeType,
+			];
+		}
+
+	}
+
+	$manifest = [
+		'name' => $name,
+		'short_name' => $shortName,
+		'theme_color' => $themeColor,
+		'display' => $display,
+		'description' => $description,
+		'scope' => $scope,
+		'start_url' => $startUrl,
+		'prefer_related_applications' => false,
+		'icons' => $icons,
+		'splash_pages' => null
+	];
+
+	echo json_encode($manifest, JSON_UNESCAPED_SLASHES);
+} ?>

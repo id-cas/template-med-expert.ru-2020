@@ -1,0 +1,7 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<label
+    for="<?php if (isset($variables["id"])): ?>#form-element-<?php echo $variables["id"]; ?><?php else: ?>#form-element-<?php echo $variables["name"]; ?><?php endif; ?>"
+    class="form__label<?php if (isset($variables["required"])): ?> form__label--required<?php endif; ?>">
+    <?php if (isset($variables["title"])): ?><?php echo $variables["title"]; ?><?php else: ?><?php echo $this->translate("l-" . $variables["name"]); ?><?php endif; ?>:
+</label>

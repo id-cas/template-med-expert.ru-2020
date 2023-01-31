@@ -1,0 +1,93 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	list($h1, $about, $headerPic, $content) =
+		$this->properties($variables['page']['obj'], ['h1', 'about', 'header_pic', 'content']);
+
+	list($timetable, $roadMapCar, $roadMapBus) =
+		$this->properties($variables['page']['obj'], ['timetable', 'roadmap_on_car', 'roadmap_on_bus']);
+} ?>
+
+<section class="clinic">
+	<div class="container">
+		<div class="inner">
+			<div class="clinic-top">
+				<div class="clinic-photo">
+					<?php if(!empty($headerPic)): ?>
+						<?= $this->render([
+							'class' => 'responsive',
+							'src' => $headerPic,
+							'alt' => $h1,
+							'width' => 150,
+							'height' => 150
+						], 'utils/thumb'); ?>
+					<?php else: ?>
+						<?= $this->render([
+							'class' => 'responsive opacity-05',
+							'src' => './resources/images/clinic-empty.jpg',
+							'alt' => $h1,
+							'width' => 150,
+							'height' => 150
+						], 'utils/thumb'); ?>
+					<?php endif; ?>
+				</div>
+				<h1 class="clinic-name"><?= $h1 ?></h1>
+				<?php if(!empty($about)): ?>
+					<div class="clinic-about"><?= $about ?></div>
+				<?php endif; ?>
+			</div>
+
+			<?php if(!empty($content)): ?>
+				<section class="clinic-content content">
+					<?= $this->parseWysiwig($content, $this); ?>
+				</section>
+			<?php endif; ?>
+
+			<?php {
+				$tabs['items'] = [];
+
+				$tabs['items'][] = [
+					'is_active' => true,
+					'icon' => '/resources/images/info-blue.svg',
+					'name' => 'Информация',
+					'id' => 'clinic-tab-info',
+					'content' => $this->render($variables, 'modules/content/clinic/tab_info'),
+				];
+
+				if(!empty($timetable)){
+					$tabs['items'][] = [
+						'is_active' => false,
+						'icon' => '/resources/images/clock.svg',
+						'name' => 'Расписание',
+						'id' => 'clinic-tab-timetable',
+						'content' => $this->render($variables, 'modules/content/clinic/tab_timetable'),
+					];
+				}
+
+				if(!empty($roadMapCar) || !empty($roadMapBus)){
+					$tabs['items'][] = [
+						'is_active' => false,
+						'icon' => '/resources/images/map-pin.svg',
+						'name' => 'Как добраться',
+						'id' => 'clinic-tab-location',
+						'content' => $this->render($variables, 'modules/content/clinic/tab_location'),
+					];
+				}
+
+				if($this->getPageByPath('specialisty')){
+					$tabs['items'][] = [
+						'is_active' => false,
+						'icon' => '/resources/images/user.svg',
+						'name' => 'Специалисты',
+						'id' => 'clinic-tab-specialists',
+						'content' => $this->render($variables, 'modules/content/clinic/tab_specialists'),
+					];
+				}
+
+			} ?>
+
+			<?= $this->render($tabs, 'modules/content/clinic/tabs') ?>
+		</div>
+	</div>
+</section>

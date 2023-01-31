@@ -1,0 +1,4 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<h1 class="js--init-hyphenate"><?php echo $variables[ "page" ][ "header" ]; ?></h1>
+<?php echo $this->render( $this->macros( "blogs20", "postsList", array( $variables[ "page" ][ "id" ] ), array( "header_pic" ) ), "modules/blogs20/posts_list" ); ?>

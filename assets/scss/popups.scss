@@ -1,0 +1,155 @@
+.popup{
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	z-index: 1000;
+	opacity: 0;
+	visibility: hidden;	
+	display: flex;
+	transition: 0.6s;
+	background: rgba(0, 0, 0, 0.3);
+	padding: 30px 20px;
+	letter-spacing: 0;
+
+	&.active{
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&-inner{
+		background-color: #fff;
+		color: #000000;
+		max-width: 600px;	
+		position: relative;
+		width: 100%;
+		margin: auto;
+	}
+
+	&-close{
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+	}
+
+	&-top{
+		padding: 13px 20px;
+		display: flex;
+		align-items: center;	
+	}
+
+	&#popup-request{
+
+		.popup-top{
+			background: #00A2BB;
+		}
+	}
+
+	&#popup-quest-answer{
+
+		.popup-top{
+			background: #FA9030;
+		}
+	}
+
+	&#popup-developers{
+
+		.popup-top{
+			background: #FA9030;
+		}
+	}
+
+	&-title{
+		font-size: 20px;
+		line-height: 27px;
+		color: #FFFFFF;
+		margin-left: 20px;
+	}
+
+	&-main{
+		padding: 50px;
+	}
+
+	&-info{
+		margin-bottom: 40px;
+
+		&-title{
+			margin-bottom: 20px;
+			font-weight: 700;
+			font-size: 18px;
+			line-height: 25px;
+			color: #202020;
+		}
+
+		p{
+			font-size: 16px;
+			line-height: 24px;
+			color: #505050;
+
+			a{
+				color: #0090A7;
+			}
+		}
+	}
+
+	&-form{
+		margin-bottom: 30px;
+
+		input{
+			display: block;
+			width: 100%;
+			font-size: 16px;
+			line-height: 22px;
+			color: #000000;
+			margin-bottom: 30px;
+			padding-bottom: 5px;
+			border-bottom: 1px solid #E0E0E0;
+		}
+
+		textarea{
+			display: block;
+			width: 100%;
+			min-height: 28px;
+			font-size: 16px;
+			line-height: 22px;
+			color: #000000;
+			margin-bottom: 30px;
+			padding-bottom: 5px;
+			border-bottom: 1px solid #E0E0E0;
+		}
+
+		button{
+			background: #0090A7;
+			border-radius: 100px;
+			display: block;
+			cursor: pointer;
+			padding: 12px 0;
+			font-size: 18px;
+			line-height: 25px;
+			text-align: center;
+			color: #93FFF0;
+			display: block;
+			width: 100%;
+			margin-top: 40px;
+		}
+
+		&-agreement{
+			font-weight: 500;
+			font-size: 12px;
+			line-height: 18px;
+			text-align: center;
+			color: #505050;
+
+			a{
+				color: #0090A7;
+			}
+		}
+	}
+}

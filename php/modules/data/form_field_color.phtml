@@ -1,0 +1,17 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<input
+    <?php if (isset($variables["id"])): ?>id="form-element-<?php echo $variables["id"]; ?>"
+    <?php else: ?>id="form-element-<?php echo $variables["name"]; ?>"<?php endif; ?>
+
+    class="input input--M   js--init-minicolor"
+    type="text"
+
+    <?php if (isset($variables["input_name"])): ?>name="<?php echo $variables["input_name"]; ?>"
+    <?php else: ?>name="<?php echo $variables["name"]; ?>"<?php endif; ?>
+
+    <?php if (isset($variables["value"])): ?>value="<?php echo $variables["value"]; ?>"<?php endif; ?>
+    <?php if (isset($variables["tip"])): ?>placeholder="<?php echo $this->translate("l-" . $variables["tip"]); ?>"<?php endif; ?>
+    <?php if (isset($variables["disabled"])): ?>disabled=""<?php endif; ?>
+    <?php if (isset($variables["required"])): ?>required=""<?php endif; ?>
+/>

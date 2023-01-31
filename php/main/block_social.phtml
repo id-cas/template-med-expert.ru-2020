@@ -1,0 +1,41 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+
+<?php {
+	$settings = $variables['SITE_SETTINGS'];
+
+	// Социальные сети
+	$socialNetworks = [];
+	if($socialNetworksFieldsId = $settings->getPropGroupByName('social_networks')){
+		$umiFieldsCollection = umiFieldsCollection::getInstance();
+
+		foreach($socialNetworksFieldsId as $socialNetworksFieldId){
+			if($umiField = $umiFieldsCollection->getById($socialNetworksFieldId)){
+
+				$fieldTitle = $umiField->getTitle();
+				$fieldName = $umiField->getName();
+				$fieldValue = $settings->getValue($fieldName);
+
+				if(empty($fieldValue)){
+					continue;
+				}
+
+				if(!isset($socialNetworks[$fieldValue])){
+					$socialNetworks[$fieldName] = [];
+				}
+
+				$socialNetworks[$fieldName] = [
+					'link' => $fieldValue,
+					'title' => $fieldTitle,
+				];
+			}
+		}
+	}
+} ?>
+
+<?php foreach($socialNetworks as $id => $socialNetwork): ?>
+	<a href="#" onclick="event.preventDefault(); window.open('<?= $socialNetwork['link'] ?>', '_blank');" target="_blank">
+		<img src="/resources/images/icons-social/<?= $id ?>.svg" alt="ico">
+	</a>
+<?php endforeach; ?>

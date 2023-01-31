@@ -1,0 +1,53 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+	$variables = $this->parseData( $variables );
+} ?>
+
+
+<h2 class="color-gray"><?php echo $this->translate( "h-feedback-form" ); ?></h2>
+<?php if ( isset( $variables[ "groups" ] ) ): ?>
+    <?php $text = null; ?>
+	<?php $boolean = null; ?>
+	<form class="form form--feedback webform" enctype="multipart/form-data" method="post" action="/webforms/send/">
+		<?php if ( isset( $variables[ "items" ] ) ): ?>
+			<?php echo $this->render( $variables, "modules/data/form_hidden" ); ?>
+		<?php endif; ?>
+		<div class="form__feedback-left">
+			<?php foreach ( $variables[ "groups" ][ 0 ][ "field" ] as $field ): ?>
+				<?php if ( $field[ "type" ] === "text" ) {
+					$text = $field;
+					continue;
+				} ?>
+				<?php if ( $field[ "type" ] === "boolean" ) {
+					$boolean = $field;
+					continue;
+				} ?>
+				<?php echo $this->render( $field, "modules/data/form_field"); ?>
+			<?php endforeach; ?>
+		</div>
+		<div class="form__feedback-right">
+			<?php if ( is_array( $text ) ): ?>
+				<?php echo $this->render( $text, "modules/data/form_field"); ?>
+			<?php endif; ?>
+			<?php if ( is_array( $boolean ) ): ?>
+				<?php echo $this->render( $boolean, "modules/data/form_field"); ?>
+			<?php endif; ?>
+
+			<?php if(isset($scope['G-RECAPTCHA'])): ?>
+				<?php echo $this->render( $scope, "modules/data/form_field_recaptcha" ); ?>
+			<?php else: ?>
+				<?php echo $this->render( $this->macros( "system", "captcha" ), "utils/captcha" ); ?>
+			<?php endif; ?>
+
+			<div class="form__element form__element--text-center">
+				<?php echo $this->render( array(
+					"type" => "submit",
+					"text" => $this->translate( "l-send" ),
+					"class" => array( "M", "primary" )
+				), "utils/button" ); ?>
+			</div>
+		</div>
+	</form>
+<?php endif; ?>

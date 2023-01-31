@@ -1,0 +1,65 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	list($schedule, $address, $phones) = $this->properties($variables['page']['obj'], ['schedule', 'address', 'phones']);
+
+	$phones = explode(',', $phones);
+} ?>
+<div class="clinic-info">
+	<?php if(!empty($schedule)): ?>
+		<div class="clinic-info-col">
+			<div class="clinic-info-title">Часы работы</div>
+			<?= $this->parseWysiwig($schedule, $this) ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if(!empty($address)): ?>
+		<div class="clinic-info-col">
+			<div class="clinic-info-title">Адрес</div>
+			<p><?= $address ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if(is_array($phones) && count($phones)): ?>
+		<div class="clinic-info-col">
+			<div class="clinic-info-title">Телефоны</div>
+			<p>
+				<?php foreach($phones as $phone): ?>
+					<a href="tel:<?= $phone ?>"><?= $this->phoneFormat($phone) ?></a><br/>
+				<?php endforeach; ?>
+			</p>
+		</div>
+	<?php endif; ?>
+
+	<div class="clinic-info-col">
+		<div class="clinic-info-title">Главный врач</div>
+		<div class="clinic-doctor">
+			<div class="clinic-doctor-photo">
+				<?= $this->render([
+					'class' => 'responsive',
+					'src' => '/resources/images/kolobuhov.png',
+					'alt' => 'Колобухов Павел Владимирович',
+					'width' => 50,
+					'height' => 50
+				], 'utils/thumb'); ?>
+			</div>
+			<div class="clinic-doctor-name">Колобухов Павел Владимирович</div>
+			<div class="clinic-doctor-contacts">
+				<a href="#"></a>
+				<a href="mailto:office@mdx39.ru">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4 4.16669H16C16.825 4.16669 17.5 4.82294 17.5 5.62502V14.375C17.5 15.1771 16.825 15.8334 16 15.8334H4C3.175 15.8334 2.5 15.1771 2.5 14.375V5.62502C2.5 4.82294 3.175 4.16669 4 4.16669Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M17.5 5.625L10 10.7292L2.5 5.625" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="clinics-map">
+	<?php // Map ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="content/map" data-params="<?= $this->htmlParams(['selected_id' => $variables['page']['id']]) ?>">
+		<div class="plholder" style="width: 100%; padding-top: 38.5%;"></div>
+	</div>
+</div>

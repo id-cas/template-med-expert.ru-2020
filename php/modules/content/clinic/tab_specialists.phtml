@@ -1,0 +1,18 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<section class="specialists" style="background-color: white;">
+	<div class="container">
+		<div class="js--items-scope">
+			<?php // Specialists ?>
+			<div class="lazy-html lazy-html--init"
+				 data-path="catalog/specialists"
+				 data-params="<?= $this->htmlParams([
+					 'page_id' => $this->getPageByPath('specialisty')->getId(),
+					 'params' => [
+						 'clinic' => $variables['page']['id']
+					 ]
+				 ]) ?>"></div>
+		</div>
+	</div>
+</section>

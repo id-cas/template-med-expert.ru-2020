@@ -1,0 +1,23 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$clinicPage = $variables['page']['obj'];
+
+	$h1 = $clinicPage->getValue('h1');
+	$timetableObj = $clinicPage->getValue('timetable');
+
+	if(!isset($timetableObj) || empty($timetableObj)){
+		return;
+	}
+
+	$timetable['filepath'] = $timetableObj->getFilePath(true);
+	$timetable['size'] = $timetableObj->getSize();
+	$timetable['name'] = $timetableObj->getFileName();
+
+	$timetable['title'] = 'Расписание клиники '. $h1;
+} ?>
+
+<div class="clinic-timetable">
+	<?= $this->render($timetable, 'utils/file') ?>
+</div>

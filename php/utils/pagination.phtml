@@ -1,0 +1,124 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$total = intval($variables['total']);
+	$perPage = intval($variables['per_page']);
+	$p = intval($variables['p']);
+
+	$firstPage = 0;
+	$lastPage = intval(ceil($total / $perPage) - 1);
+
+	$prevPage = ($p > 0) ? ($p - 1) : 0;
+	$nextPage = ($p < $lastPage) ? ($p + 1) : ($lastPage - 1);
+
+	/** Набор кнопок пагинации */
+	$visibleRange = [];
+	if($lastPage <= 4){
+		for($i = 1; ($i < 5 && $i < $lastPage); $i++){
+			$visibleRange[] = $i;
+		}
+	}
+	else {
+		if ($p <= 3){
+			for($i = 1; ($i < 5 && $i < $lastPage - 1); $i++){
+				$visibleRange[] = $i;
+			}
+			$visibleRange[] = null;
+		}
+		elseif ($p > 3 && $p < $lastPage - 1){
+			$visibleRange[] = null;
+			for($i = ($p - 2); ($i < ($p + 3) && $i < $lastPage); $i++){
+				$visibleRange[] = $i;
+			}
+			$visibleRange[] = null;
+		}
+		else {
+			$visibleRange[] = null;
+			for($i = ($p - 5); $i < ($p + 1); $i++){
+				$visibleRange[] = $i;
+			}
+		}
+	}
+
+	if($total <= $perPage){
+		return;
+	}
+}?>
+
+
+
+
+<div class="js--items-pagination pagination">
+	<?php if(($perPage * ($p + 1)) < $total): ?>
+		<a class="show-more" data-total="<?= $total ?>" data-page="<?= $p ?>" onclick="event.preventDefault(); window.cwrk.showMoreItems(this);" href="#">Показать еще</a>
+	<?php endif; ?>
+
+	<ul>
+		<?php if($p > $firstPage): ?>
+			<li>
+				<a href="#" onclick="changePage(event, <?= $prevPage ?>);">
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14.25 9H3.75" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M9 3.75L3.75 9L9 14.25" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			</li>
+		<?php endif; ?>
+
+
+		<?php if($firstPage === $p): ?>
+			<li class="active">
+				<span><?= $firstPage + 1 ?></span>
+			</li>
+		<?php else: ?>
+			<li>
+				<a href="#" onclick="changePage(event, <?= $firstPage ?>);"><?= $firstPage + 1 ?></a>
+			</li>
+		<?php endif; ?>
+
+
+		<?php foreach($visibleRange as $index => $val): ?>
+
+				<?php if(!empty($val) && $val === $p): ?>
+					<li class="active">
+						<span><?= $val + 1 ?></span>
+					</li>
+				<?php else: ?>
+					<?php if(empty($val)): ?>
+						<?php if($p < $lastPage - 2): ?>
+							<li>
+								<span>...</span>
+							</li>
+						<?php endif; ?>
+					<?php else: ?>
+						<li>
+							<a href="#" onclick="changePage(event, <?= $val ?>);"><?= $val + 1 ?></a>
+						</li>
+					<?php endif; ?>
+				<?php endif; ?>
+
+		<?php endforeach; ?>
+
+
+		<?php if($lastPage !== $p): ?>
+			<li>
+				<a href="#" onclick="changePage(event, <?= $lastPage ?>);"><?= $lastPage + 1 ?></a>
+			</li>
+		<?php else: ?>
+			<li class="active">
+				<span><?= $lastPage + 1 ?></span>
+			</li>
+		<?php endif; ?>
+
+		<?php if($p < $lastPage): ?>
+			<li>
+				<a href="#" onclick="changePage(event, <?= $nextPage ?>);" onclick="changePage(event, <?= $nextPage ?>);">
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M3.75 9H14.25" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M9 3.75L14.25 9L9 14.25" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			</li>
+		<?php endif; ?>
+	</ul>
+</div>

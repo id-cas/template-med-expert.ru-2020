@@ -1,0 +1,44 @@
+.plholder {
+	position: relative;
+	min-height: 100%;
+	overflow-y: auto;
+	background-color: #e2edf2;
+
+	&--opacity5{
+		opacity: 0.5;
+	}
+
+	&--br2{
+		webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		border-radius: 2px;
+	}
+
+	&--br4{
+		webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+
+	&--br50 {
+	  webkit-border-radius: 50%;
+	  -moz-border-radius: 50%;
+	  border-radius: 50%;
+  	}
+
+	&--text {
+		display: inline-block;
+		min-height: auto;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 2;
+		color: #5b686f;
+		text-align: center;
+	}
+
+	&--inline {
+		color: #5b686f;
+  	}
+}

@@ -1,0 +1,126 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$variables = $_GET;
+
+	if (!function_exists('mb_ucfirst')) {
+		function mb_ucfirst($str, $encoding = "UTF-8", $lower_str_end = false) {
+			$first_letter = mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding);
+			$str_end = "";
+			if ($lower_str_end) {
+				$str_end = mb_strtolower(mb_substr($str, 1, mb_strlen($str, $encoding), $encoding), $encoding);
+			}
+			else {
+				$str_end = mb_substr($str, 1, mb_strlen($str, $encoding), $encoding);
+			}
+			$str = $first_letter . $str_end;
+			return $str;
+		}
+	}
+} ?>
+
+<?php {
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+
+	// Выберем всех специлистов/врачей и рассортируем их по группам/специальностям
+	$specialists = $this->parseData($this->macros('catalog', 'getSmartCatalog', [null, $this->getPageByPath('specialisty')->getId(), 9999, null, 2], ['specialization', 'job_clinics']));
+
+	if(isset($specialists['lines'])){
+		$umiObjectCollection = umiObjectsCollection::getInstance();
+
+		// ФИО всех специалистов
+		$fios = [];
+		foreach($specialists['lines'] as $specialist){
+			$fios[$specialist['id']] = $specialist['text'];
+		}
+
+		$fios = array_flip($fios);
+		ksort($fios);
+		$fios = array_flip($fios);
+
+
+		// Специализации
+		$specializations = [];
+		foreach($specialists['lines'] as $specialist){
+
+			if(!isset($specialist['properties'])){
+				continue;
+			}
+
+			if(!isset($specialist['properties']['specialization'])){
+				continue;
+			}
+
+			foreach($specialist['properties']['specialization'] as $specId){
+				$spec = $umiObjectCollection->getById($specId);
+				if(!($spec instanceof umiObject)){
+					continue;
+				}
+
+				$specializations[$specId] = mb_ucfirst($spec->getName());
+			}
+		}
+
+		$specializations = array_flip($specializations);
+		ksort($specializations);
+		$specializations = array_flip($specializations);
+
+
+		// Клиники
+		$clinics = [];
+		foreach($specialists['lines'] as $specialist){
+
+			if(!isset($specialist['properties'])){
+				continue;
+			}
+
+			if(!isset($specialist['properties']['job_clinics'])){
+				continue;
+			}
+
+			foreach($specialist['properties']['job_clinics'] as $clinic){
+				$clinics[$clinic->getId()] = mb_ucfirst($clinic->getName());
+			}
+		}
+
+		$clinics = array_flip($clinics);
+		ksort($clinics);
+		$clinics = array_flip($clinics);
+	}
+
+} ?>
+
+
+<?php {
+	$params = $_GET;
+
+} ?>
+
+<section class="filter">
+	<div class="container">
+		<form action="#" class="filter-search">
+			<input type="text" placeholder="Поиск по имени" name="name" <?php if(isset($params['name']) && !empty($params['name'])): ?>value="<?= $params['name'] ?>"<?php endif; ?>>
+			<button>
+				<img src="/resources/images/search.svg" alt="ico"/>
+			</button>
+		</form>
+		<div class="select-wrap">
+			<select name="specialization" class="js--specialist-filter-field">
+				<option value="">Все специалисты</option>
+				<?php foreach($specializations as $id => $spec): ?>
+					<option value="<?= $id ?>" <?php if(isset($params['specialization']) && $params['specialization'] == $id): ?>selected="selected"<?php endif; ?>><?= $spec ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="select-wrap">
+			<select name="clinic" class="js--specialist-filter-field">
+				<option value="">Все клиники</option>
+				<?php foreach($clinics as $id => $clinic): ?>
+					<option value="<?= $id ?>" <?php if(isset($params['clinic']) && $params['clinic'] == $id): ?>selected="selected"<?php endif; ?>><?= $clinic ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,15 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<select
+    <?php if ( isset( $variables[ "id" ] ) ): ?>id="form-element-<?php echo $variables[ "id" ]; ?>"
+    <?php else: ?>id="form-element-<?php echo $variables[ "name" ]; ?>"<?php endif; ?>
+    class="select"
+    <?php if ( isset( $variables[ "input_name" ] ) ): ?>name="<?php echo $variables[ "input_name" ]; ?>"
+<?php else: ?>name="<?php echo $variables[ "name" ]; ?>"<?php endif; ?>
+    <?php if ( isset( $variables[ "disabled" ] ) ): ?>disabled=""<?php endif; ?>
+    <?php if ( isset( $variables[ "required" ] ) ): ?>required=""<?php endif; ?>
+    >
+    <?php foreach ( $variables[ "values" ] as $option ): ?>
+        <option value="<?php echo $option[ "id" ]; ?>" <?php if ( isset( $option[ "selected" ] ) ): ?>selected="selected"<?php endif; ?>><?php echo $option[ "name" ]; ?></option>
+    <?php endforeach; ?>
+</select>

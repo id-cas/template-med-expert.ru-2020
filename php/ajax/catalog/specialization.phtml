@@ -1,0 +1,159 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+
+	if (!function_exists('mb_ucfirst')) {
+		function mb_ucfirst($str, $encoding = "UTF-8", $lower_str_end = false) {
+			$first_letter = mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding);
+			$str_end = "";
+			if ($lower_str_end) {
+				$str_end = mb_strtolower(mb_substr($str, 1, mb_strlen($str, $encoding), $encoding), $encoding);
+			}
+			else {
+				$str_end = mb_substr($str, 1, mb_strlen($str, $encoding), $encoding);
+			}
+			$str = $first_letter . $str_end;
+			return $str;
+		}
+	}
+} ?>
+
+<?php {
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+
+	// Выберем всех специлистов/врачей и рассортируем их по группам/специальностям
+	$specialists = $this->parseData($this->macros('catalog', 'getSmartCatalog', [null, $this->getPageByPath('specialisty')->getId(), 9999, null, 2], ['specialization']));
+
+
+	if(isset($specialists['lines'])){
+		$umiObjectCollection = umiObjectsCollection::getInstance();
+
+		$specializations = [];
+		foreach($specialists['lines'] as $specialist){
+
+			if(!isset($specialist['properties'])){
+				continue;
+			}
+
+			if(!isset($specialist['properties']['specialization'])){
+				continue;
+			}
+
+			foreach($specialist['properties']['specialization'] as $specId){
+				$spec = $umiObjectCollection->getById($specId);
+				if(!($spec instanceof umiObject)){
+					continue;
+				}
+
+				$specializations[$specId] = mb_ucfirst($spec->getName());
+			}
+		}
+
+		$specializations = array_flip($specializations);
+		ksort($specializations);
+	}
+
+	$specializationsByAlphabet = [];
+	foreach($specializations as $specName => $specId){
+		$firstChar = mb_substr($specName, 0, 1);
+
+		if(!isset($specializationsByAlphabet[$firstChar])){
+			$specializationsByAlphabet[$firstChar] = [];
+		}
+
+		$specializationsByAlphabet[$firstChar][] = ['name' => $specName, 'id' => $specId];
+	}
+
+} ?>
+
+<?php {
+	/** Распределим специальности по колонкам */
+
+	function distributeMenuColumns($items, $perColumn, $colsCount){
+
+		// Расставим элементы по столбцам
+		$columns = [];
+		$colNum = 0;
+		$perColumnCounter = 0;
+
+		foreach($items as $alphabetChar => $subItems){
+
+			if($perColumnCounter >= $perColumn){
+				$colNum++;
+				$perColumnCounter = 0;
+				if($colNum > ($colsCount - 1)){
+					$colNum = ($colsCount - 1);
+				}
+			}
+
+			// Добавим в итоговую сборку
+			if (!isset($columns[$colNum])){
+				$columns[$colNum] = [];
+			}
+			$columns[$colNum][$alphabetChar] = $subItems;
+
+			$perColumnCounter += (count($subItems) + 1);
+		}
+
+		return $columns;
+	}
+
+
+
+
+	$countLevel1 = 0;
+	$countLevel2 = 0;
+	foreach($specializationsByAlphabet as $alphabetChar => $specializations){
+		$countLevel1++;
+		$countLevel2 += count($specializations);
+
+	}
+
+	// Общее количество групп и подгрупп
+	$total = $countLevel1 + $countLevel2;
+
+
+	// Определим примерное количество для одного столбца (всего 4-и столбца)
+	$perColumn = round( $total/4 );
+	if ( $perColumn < 1 ){
+		$perColumn = 1;
+	}
+
+	// Разнести разделы по колонкам
+
+	$categoriesByCols = distributeMenuColumns($specializationsByAlphabet, $perColumn, 4);
+	if( count($categoriesByCols) < 4 && $countLevel1 > 3 ){
+		$categoriesByCols = distributeMenuColumns($specializationsByAlphabet, round(0.75 * $perColumn), 4);
+	}
+
+//	$this->dump(json_encode($categoriesByCols, JSON_UNESCAPED_UNICODE));
+
+
+//	// Разделим категории на 3-и столбца
+//	$col1 = isset( $categoriesByCols[0] ) ? $categoriesByCols[0] : [];
+//	$col2 = isset( $categoriesByCols[1] ) ? $categoriesByCols[1] : [];
+//	$col3 = isset( $categoriesByCols[2] ) ? $categoriesByCols[2] : [];
+//	$col4 = isset( $categoriesByCols[3] ) ? $categoriesByCols[3] : [];
+
+} ?>
+
+<div class="inner">
+	<?php foreach($categoriesByCols as $col): ?>
+		<div class="m-specialists-col">
+			<?php foreach($col as $specChar => $specList): ?>
+				<div class="m-specialists-item">
+					<div class="m-specialists-item-title"><?= $specChar ?></div>
+					<ul>
+						<?php foreach($specList as $specData): ?>
+							<li>
+								<a href="/specialisty/?specialization=<?= $specData['id'] ?>"><?= $specData['name'] ?></a>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endforeach; ?>
+</div>

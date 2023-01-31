@@ -1,0 +1,50 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php if(isset($variables['mode']) && $variables['mode'] === 'placeholder'): ?>
+	<div class="col-lg-4 col-md-6 mb-5">
+			<span class="blog-item">
+				<?= $this->render([
+					'class' => 'responsive',
+					'alt' => '',
+					'width' => 360,
+					'height' => 280
+				], 'utils/thumb'); ?>
+
+				<div class="blog-item-date">
+					<span><div class="plholder plholder--inline plholder--br4" style="width: 68px; height: 28px;"></div></span>
+					<span><div class="plholder plholder--inline plholder--br4" style="width: 34px; height: 10px;"></div></span>
+				</div>
+				<div class="blog-item-title"><div class="plholder plholder--inline plholder--opacity5 plholder--br4" style="width: 170px; height: 24px;"></div></div>
+			</span>
+	</div>
+
+	<?php return; ?>
+<?php endif; ?>
+
+<div class="col-lg-4 col-md-6 mb-5">
+	<a href="<?= $variables['link'] ?>" class="blog-item">
+		<?php if(isset($variables['properties']['header_pic'])): ?>
+			<?= $this->render([
+				'class' => 'responsive',
+				'src' => $variables['properties']['header_pic'],
+				'alt' => $variables['name'],
+				'width' => 360,
+				'height' => 280
+			], 'utils/thumb'); ?>
+		<?php else: ?>
+			<?= $this->render([
+				'class' => 'responsive opacity-05',
+				'src' => './resources/images/blog-empty.jpg',
+				'alt' => $variables['name'],
+				'width' => 360,
+				'height' => 280
+			], 'utils/thumb'); ?>
+		<?php endif; ?>
+		<div class="blog-item-date">
+			<span><?= date('d/m', $variables['publish_time']) ?></span>
+			<span><?= date('Y', $variables['publish_time']) ?></span>
+		</div>
+		<div class="blog-item-title"><?= $variables['name'] ?></div>
+	</a>
+</div>

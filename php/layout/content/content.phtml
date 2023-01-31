@@ -1,0 +1,22 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+
+<?php {
+	$pageGUID = umiObjectTypesCollection::getInstance()->getType($variables['page']['type_id'])->getGUID();
+
+
+	if($pageGUID === 'content-contacts'){
+		echo $this->render($variables, 'layout/content/contacts');
+	}
+	elseif($pageGUID === 'content-clinic'){
+		echo $this->render($variables, 'layout/content/clinic');
+	}
+	elseif($pageGUID === 'content-timetables'){
+		echo $this->render($variables, 'layout/content/timetables');
+	}
+	else {
+		echo $this->render($variables, 'modules/'. $variables['module']. '/'. $variables['method']);
+	}
+
+} ?>

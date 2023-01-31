@@ -1,0 +1,36 @@
+.advantages {
+	background: #f8f8f8;
+	border-radius: 10px;
+
+	&-item {
+		background: #ffffff;
+		padding: 10px;
+		border-radius: 10px;
+		height: 100%;
+
+		@media (hover: hover) {
+			&:hover {
+				box-shadow: 0 2px 5px rgba(136, 136, 136, 0.2);
+			}
+		}
+
+		&-img{
+			padding: 10px;
+		}
+
+		&-title{
+			text-align: center;
+			text-decoration: none;
+			font-size: 12px;
+			padding: 10px 0;
+			color: #0094a9;
+			border: none;
+			outline: none;
+
+			&:hover {
+				color: #0094a9;
+				text-decoration: none;
+			}
+		}
+	}
+}

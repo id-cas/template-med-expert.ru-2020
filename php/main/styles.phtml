@@ -1,0 +1,87 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+    $styles = [
+        'main' => [
+            'main', 'min',
+			'templates/main/assets/css/reboot.css',
+
+			'templates/main/assets/scss/grid-components/functions.scss',
+			'templates/main/assets/scss/grid-components/variables.scss',
+			'templates/main/assets/scss/grid-components/mixins/breakpoints.scss',
+			'templates/main/assets/scss/grid-components/mixins/grid-framework.scss',
+			'templates/main/assets/scss/grid-components/mixins/grid.scss',
+			'templates/main/assets/scss/grid-components/grid.scss',
+			'templates/main/assets/scss/grid-components/utilities/display.scss',
+			'templates/main/assets/scss/grid-components/utilities/flex.scss',
+			'templates/main/assets/scss/grid-components/utilities/spacing.scss',
+
+			'templates/main/assets/scss/hamburgers/hamburgers.scss',
+			'templates/main/assets/scss/hamburgers/base.scss',
+			'templates/main/assets/scss/hamburgers/types/spin.scss',
+			'templates/main/assets/scss/hamburgers/types/3dx.scss',
+			'templates/main/assets/scss/hamburgers/types/3dx-r.scss',
+			'templates/main/assets/scss/hamburgers/types/3dy.scss',
+			'templates/main/assets/scss/hamburgers/types/3dy-r.scss',
+			'templates/main/assets/scss/hamburgers/types/3dxy.scss',
+			'templates/main/assets/scss/hamburgers/types/3dxy-r.scss',
+			'templates/main/assets/scss/hamburgers/types/arrow.scss',
+			'templates/main/assets/scss/hamburgers/types/arrow-r.scss',
+			'templates/main/assets/scss/hamburgers/types/arrowalt.scss',
+			'templates/main/assets/scss/hamburgers/types/arrowalt-r.scss',
+			'templates/main/assets/scss/hamburgers/types/arrowturn.scss',
+			'templates/main/assets/scss/hamburgers/types/arrowturn-r.scss',
+			'templates/main/assets/scss/hamburgers/types/boring.scss',
+			'templates/main/assets/scss/hamburgers/types/collapse.scss',
+			'templates/main/assets/scss/hamburgers/types/collapse-r.scss',
+			'templates/main/assets/scss/hamburgers/types/elastic.scss',
+			'templates/main/assets/scss/hamburgers/types/elastic-r.scss',
+			'templates/main/assets/scss/hamburgers/types/emphatic.scss',
+			'templates/main/assets/scss/hamburgers/types/emphatic-r.scss',
+			'templates/main/assets/scss/hamburgers/types/minus.scss',
+			'templates/main/assets/scss/hamburgers/types/slider.scss',
+			'templates/main/assets/scss/hamburgers/types/slider-r.scss',
+			'templates/main/assets/scss/hamburgers/types/spin-r.scss',
+			'templates/main/assets/scss/hamburgers/types/spring.scss',
+			'templates/main/assets/scss/hamburgers/types/spring-r.scss',
+			'templates/main/assets/scss/hamburgers/types/stand.scss',
+			'templates/main/assets/scss/hamburgers/types/stand-r.scss',
+			'templates/main/assets/scss/hamburgers/types/squeeze.scss',
+			'templates/main/assets/scss/hamburgers/types/vortex.scss',
+			'templates/main/assets/scss/hamburgers/types/vortex-r.scss',
+
+			'templates/main/assets/css/swiper.min.css',
+
+			'templates/main/assets/scss/popups.scss',
+
+			'templates/main/assets/scss/breadcrumbs.scss',
+			'templates/main/assets/scss/faq.scss',
+			'templates/main/assets/scss/advantages.scss',
+
+			'templates/main/assets/scss/main.scss',
+			'templates/main/assets/scss/media.scss',
+
+
+			'templates/main/assets/scss/utils/placeholder.scss',
+			'templates/main/assets/scss/utils/lazy.html.scss',
+			'templates/main/assets/scss/utils/utils.scss',
+
+
+			'templates/main/assets/scss/show-body.scss',
+
+			'templates/main/assets/scss/thirdparty/jquery.fancybox.scss',
+        ],
+
+    ];
+
+
+
+	$absPath = 'templates/main/assets/scss/';
+
+    foreach ( $variables as $groupName ) {
+        $cssFile = $this->macros( 'custom', 'scss2cssMin', $styles[$groupName] );
+        echo '<link rel="stylesheet" type="text/css" href="' . $cssFile . '"/>';
+    }
+}
+?>

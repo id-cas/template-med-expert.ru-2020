@@ -1,0 +1,53 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<div class="field">
+    <div class="row">
+        <?php foreach ($variables["items"] as $item): ?>
+            <?php
+            {
+                $open = false;
+
+                foreach ($item["items"] as $sub_item)
+                {
+                    if (isset($sub_item["selected"])) {
+                        $open = true;
+                        break;
+                    }
+                }
+            }
+            ?>
+            <div class="cell cell--X12 cell--S6">
+                <div class="collapse collapse--theme-primary<?php if ($open): ?> collapse--open<?php endif; ?>">
+                    <a class="collapse__link collapse--theme-primary__link   js--onclick-collapse" href="#" title="<?php echo $this->translate("l-expand"); ?>"><?php echo $item["name"]; ?></a>
+                    <div class="collapse__content collapse--theme-primary__content">
+                        <?php foreach ($item["items"] as $sub_item): ?>
+                            <label class="boolean boolean--checkbox">
+                                <input class="boolean__input boolean--checkbox__input"
+                                       type="checkbox"
+
+                                       <?php if (isset($variables["input_name"])): ?>name="<?php echo $variables["input_name"]; ?>"
+                                       <?php else: ?>name="<?php echo $variables["name"]; ?>"<?php endif; ?>
+
+                                       value="<?php echo $sub_item["id"]; ?>"
+                                    <?php if ($sub_item["properties"]): ?>
+                                        data-h1="<?php echo $sub_item["properties"]["h1"]; ?>"
+                                        data-image="<?php echo $sub_item["properties"]["header_pic"]["src"]; ?>"
+                                    <?php endif; ?>
+                                       data-parent-id="<?php echo $item["id"]; ?>"
+                                    <?php if (isset($item["properties"])): ?>
+                                        data-parent-h1="<?php echo $item["properties"]["h1"]; ?>"
+                                        data-parent-image="<?php echo $item["properties"]["header_pic"]["src"]; ?>"
+                                    <?php endif; ?>
+                                       data-link="<?php echo $sub_item["link"]; ?>"
+                                       data-parent-link="<?php echo $item["link"]; ?>"
+                                    <?php echo (isset($sub_item["selected"])) ? "checked": ""; ?>/>
+                                <span class="boolean__indicator boolean--checkbox__indicator"></span>
+                                <span class="boolean__text"><?php echo $sub_item["name"]; ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

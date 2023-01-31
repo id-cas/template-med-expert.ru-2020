@@ -1,0 +1,97 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $variables = $this->parseData($variables); ?>
+
+<?php if(isset($variables['mode']) && $variables['mode'] === 'placeholder'): ?>
+	<section class="main-offers">
+		<div class="container">
+			<div class="row">
+				<?php for($i = 0; $i < 2; $i++): ?>
+					<div class="col-lg-6">
+						<div class="offer">
+							<?= $this->render([
+								'class' => 'responsive',
+								'alt' => '',
+								'width' => 555,
+								'height' => 360,
+							], 'utils/thumb')
+							?>
+
+							<div class="offer-title">&nbsp;</div>
+							<div class="offer-bottom">
+								<p>&nbsp;</p>
+							</div>
+						</div>
+					</div>
+				<?php endfor; ?>
+			</div>
+		</div>
+	</section>
+	<?php return; ?>
+<?php endif; ?>
+
+
+<?php if(isset($variables['banners']) && count($variables['banners'])): ?>
+	<section class="main-offers">
+		<div class="container">
+			<div class="row justify-content-center">
+				<?php {
+					$count = count($variables['banners']);
+					$presets = [
+						'cell-class' => 'col-lg-6',
+						'img-width' => 555,
+						'img-height' => 360,
+					];
+					if($count === 1){
+						$presets = [
+							'cell-class' => 'col-lg-12',
+							'img-width' => 555 * 2,
+							'img-height' => 360,
+						];
+					}
+				} ?>
+				<?php foreach($variables['banners'] as $banner): ?>
+					<?php {
+						$bannerId = $banner['id'];
+
+						$banner = umiObjectsCollection::getInstance()->getObject($bannerId);
+						list($header, $anons, $button, $img, $openInNewWindow) =
+							$this->properties($banner, ['banner_header', 'banner_anons', 'banner_button', 'banner_image', 'open_in_new_window']);
+
+						if(boolval($openInNewWindow) === true){
+							$openTabCmd = "window.open('/banners/go_to/{$bannerId}/');";
+						}
+						else {
+							$openTabCmd = "window.location = '/banners/go_to/{$bannerId}/';";
+						}
+					} ?>
+
+					<div class="<?= $presets['cell-class'] ?> mb-5">
+						<div class="offer">
+							<?= $this->render([
+									'class' => 'responsive',
+									'src' => $img['src'],
+									'alt' => $header,
+									'width' => $presets['img-width'],
+									'height' => $presets['img-height'],
+								], 'utils/thumb')
+							?>
+
+							<a class="offer-info-mob" href="#" onclick="event.preventDefault(); <?= $sOpenTabCmd ?> return false;">
+								<img src="/resources/images/info.svg" alt="ico">
+							</a>
+							<div class="offer-title"><?= !empty($header) ? $header : '&nbsp;' ?></div>
+							<div class="offer-bottom">
+								<p><?= !empty($anons) ? $anons : '&nbsp;' ?></p>
+
+								<?php if(!empty($button)): ?>
+									<a class="offer-sign-up" href="#" onclick="event.preventDefault(); <?= $openTabCmd ?> return false;"><?= $button ?></a>
+								<?php endif; ?>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>

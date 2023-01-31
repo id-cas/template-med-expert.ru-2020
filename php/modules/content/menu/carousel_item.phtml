@@ -1,0 +1,20 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$properties = $variables['properties'];
+	$brandLink = '/catalog/?filter%5Btrade_mark%5D%5B%5D='. preg_replace('/\s/', '+', $variables['text']);
+} ?>
+
+
+<div class="brands">
+	<a class="brands__item" href="#" onclick="event.preventDefault(); window.location='<?= $brandLink ?>'; return false;">
+		<?= $this->render([
+			'class' => 'responsive',
+			'src' => $properties['header_pic']['src'],
+			'alt' => $variables['text'],
+			'width' => 210,
+			'height' => 80,
+			'background' => 'transparent',
+		], 'utils/thumb' ); ?>
+	</a>
+</div>

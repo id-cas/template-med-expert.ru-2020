@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+// Settings
+// ==================================================
+$hamburger-layer-width         : 24px !default;
+$hamburger-layer-height        : 2px !default;
+$hamburger-layer-spacing       : 6px !default;
+$hamburger-layer-color         : #0094A9 !default;
+$hamburger-layer-border-radius : 4px !default;
+$hamburger-hover-opacity       : 1 !default;
+$hamburger-active-layer-color  : $hamburger-layer-color !default;
+$hamburger-active-hover-opacity: $hamburger-hover-opacity !default;
+
+// Types (Remove or comment out what you don’t need)
+// ==================================================
+$hamburger-types: (
+  spin
+  // 3dx,
+  // 3dx-r,
+  // 3dy,
+  // 3dy-r,
+  // 3dxy,
+  // 3dxy-r,
+  // arrow,
+  // arrow-r,
+  // arrowalt,
+  // arrowalt-r,
+  // arrowturn,
+  // arrowturn-r,
+  // boring,
+  // collapse,
+  // collapse-r,
+  // elastic,
+  // elastic-r,
+  // emphatic,
+  // emphatic-r,
+  // minus,
+  // slider,
+  // slider-r,
+  // spin-r,
+  // spring,
+  // spring-r,
+  // stand,
+  // stand-r,
+  // squeeze,
+  // vortex,
+  // vortex-r
+) !default;

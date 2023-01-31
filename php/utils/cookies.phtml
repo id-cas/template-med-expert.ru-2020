@@ -1,0 +1,23 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+
+	// Куки
+	$cookiesText = $settings->getValue('cookies_text');
+}
+?>
+<?php if (!empty($cookiesText)): ?>
+	<div class="cookies">
+		<div class="modal__center">
+			<div class="modal__body">
+				<div class="modal__content">
+					<?= $cookiesText ?>
+					<a class="btn__cookies" onclick="event.preventDefault(); window.cwrk.cookiesAccept();" href="#">Понятно</a>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>

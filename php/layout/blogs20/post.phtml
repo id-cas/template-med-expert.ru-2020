@@ -1,0 +1,47 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $header_pic = $this->property( $variables[ "page" ][ "obj" ], "header_pic" ); ?>
+<?php $post = $this->parseData( $this->macros( "blogs20", "postView", array( $variables[ "page" ][ "id" ] ) ) );  ?>
+<div class="row row--align">
+    <div class="cell cell--X12 cell--L7 cell--middle">
+        <h1 class="js--init-hyphenate"><?php echo $variables[ "page" ][ "header" ]; ?></h1>
+    </div>
+    <div class="cell cell--X12 cell--L5 cell--middle cell--X-text-right cell--padding-bottom">
+        <div class="row row--align">
+            <div class="cell cell--padding-top cell--top">
+                <?php echo $this->render( $this->macros( "content", "getPrevPage", array( $variables[ "page" ][ "id" ] ) ), "utils/prev_page" ); ?>
+            </div>
+            <div class="cell cell--padding-top cell--top">
+                <?php echo $this->render( $this->macros( "content", "getNextPage", array( $variables[ "page" ][ "id" ] ) ), "utils/next_page" ); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="cell cell--X12 cell--L3">
+        <div class="fancy">
+            <div class="fancy__bold">
+                <div class="fancy__corners">
+                    <span class="fancy__bold-tl"></span>
+                    <span class="fancy__bold-tr"></span>
+                    <span class="fancy__bold-bl"></span>
+                    <span class="fancy__bold-br"></span>
+                </div>
+                <?php echo $this->render(
+                    array(
+                        "class" => "responsive",
+                        "src" => $header_pic[ "src" ],
+                        "alt" => $variables[ "page" ][ "header" ],
+                        "width" => 280,
+                        "height" => 498,
+                        "crop" => true
+                    ), "utils/thumb" ); ?>
+            </div>
+        </div>
+    </div>
+    <div class="cell cell--X12 cell--L9">
+        <article class="article">
+            <?php echo $post[ "content" ]; ?>
+        </article>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+    $type = isset( $variables["type"] ) ? $variables["type"] : 1;
+    $tier1 = array( 
+        "fb" => array( "name" => $this->translate( "l-fb" ), "link" => "https://www.facebook.com/sharer/sharer.php?u=%url%" ),
+        "vk" => array( "name" => $this->translate( "l-vk" ), "link" => "http://vkontakte.ru/share.php?url=%url%" ),
+        "ok" => array( "name" => $this->translate( "l-ok" ), "link" => "http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=%url%" )
+     );
+    $tier2 = array( 
+        "gp" => array( "name" => $this->translate( "l-gp" ), "link" => "https://plus.google.com/share?url=%url%" ),
+        "tw" => array( "name" => $this->translate( "l-tw" ), "link" => "https://twitter.com/intent/tweet?url=%url%" ),
+        "lj" => array( "name" => $this->translate( "l-lj" ), "link" => "http://www.livejournal.com/update.bml?subject=&event=%url%" )
+     );
+
+    if ( isset( $variables["all"] ) ) {
+        if ( $variables["all"] === true ) {
+            $tier1 = array_merge( $tier1, $tier2 );
+            $tier2 = array();
+        }
+        else if ( $variables["all"] === false ) {
+            $tier2 = array_merge( $tier1, $tier2 );
+            $tier1 = array();
+        }
+    }
+}
+?>
+
+<div class="list list--social-type-<?php echo $type; ?>">
+    <ul class="list__items list--social-type-<?php echo $type; ?>__items">
+        <?php foreach ( $tier1 as $key => $entry ): ?>
+            <li class="list__item list--social-type-<?php echo $type; ?>__item">
+                <a class="list__link list--social-type-<?php echo $type; ?>__link   js--onclick-popupSharing"  href="#" data-url="<?php echo $entry["link"]; ?>">
+                    <span class="list__image list--social-type-<?php echo $type; ?>__image   spr spr--group-social-<?php echo $type; ?> spr--<?php echo $key . $type; ?>"></span>
+                </a>
+            </li>
+        <?php endforeach; ?>
+        <li class="list__item list--social-type-<?php echo $type; ?>__item">
+            <a class="list__link list--social-type-<?php echo $type; ?>__link   js--onclick-dropdownToggle" href="#">
+                <span class="list__image list--social-type-<?php echo $type; ?>__image   spr spr--group-social-<?php echo $type; ?> spr--sh<?php echo $type; ?>"></span>
+            </a>
+            <div class="dropdown dropdown--absolute dropdown--social dropdown--click   js--dropdown">
+                <div class="dropdown__content dropdown--absolute__content dropdown--social__content">
+                    <div class="list list--social-type-1 list--social-sub">
+                        <ul class="list__items list--social-type-1__items list--social-sub__items">
+                            <?php foreach ( $tier2 as $key => $entry ): ?>
+                                <li class="list__item list--social-type-1__item list--social-sub__item">
+                                    <a class="list__link list--social-type-1__link   js--onclick-popupSharing" href="#" data-url="<?php echo $entry["link"]; ?>">
+                                        <span class="list__image list--social-type-1__image   spr spr--group-social-1 spr--<?php echo $key; ?>1"></span>
+                                        <span class="list__text  list--social-type-1__text"><?php echo $entry["name"]; ?></span>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                            <li class="list__item list--social-type-1__item list--social-sub__item">
+                                <a class="list__link list--social-type-1__link   js--onclick-appSharing" href="#" data-url="tg://msg_url%url%">
+                                    <span class="list__image list--social-type-1__image   spr spr--group-social-1 spr--tg1"></span>
+                                    <span class="list__text  list--social-type-1__text">Telegramm</span>
+                                </a>
+                            </li>
+                            <li class="list__item list--social-type-1__item list--social-sub__item">
+                                <a class="list__link list--social-type-1__link   js--onclick-appSharing" href="" data-url="whatsapp://send?text=%url%">
+                                    <span class="list__image list--social-type-1__image   spr spr--group-social-1 spr--wa1"></span>
+                                    <span class="list__text  list--social-type-1__text">WatsApp</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

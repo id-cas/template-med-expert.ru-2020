@@ -1,0 +1,83 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$items = $variables;
+} ?>
+
+<?php if(isset($items) && count($items)): ?>
+	<?php {
+		$uniqId = uniqid();
+	} ?>
+
+	<div class="slider">
+		<div id="slick-<?php echo $uniqId; ?>" class="slider__items row">
+			<?php foreach ( $items as $item ): ?>
+				<div class="slider__item cell cell--X3">
+					<?php echo $this->render( $item, "modules/content/menu/carousel_item" ); ?>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<div class="slider__arrows">
+            <span class="slider__prev">
+                <?php echo $this->render([
+	                'id' => 'js--similarSliderPrev-'. $uniqId,
+	                'type' => 'button',
+	                'class' => ['wrapper'],
+	                'sprite' => ['before', 'spr spr--arrows-left'],
+                ], 'utils/button'); ?>
+            </span>
+            <span class="slider__next">
+                <?php echo $this->render([
+	                'id' => 'js--similarSliderNext-'. $uniqId,
+	                'type' => 'button',
+	                'class' => ['wrapper'],
+	                'sprite' => ['before', 'spr spr--arrows-right'],
+                ], 'utils/button'); ?>
+            </span>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var slickSelector = '#slick-<?php echo $uniqId; ?>';
+
+		window.cwrk = window.cwrk || {};
+		window.cwrk.slick = window.cwrk.slick || {};
+		window.cwrk.slick[slickSelector] = {
+			state: 'rendered',
+
+			infinite: false,
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			prevArrow: '#js--similarSliderPrev-<?php echo $uniqId; ?>',
+			nextArrow: '#js--similarSliderNext-<?php echo $uniqId; ?>',
+			responsive: [
+				{
+					breakpoint: 510,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1,
+						centerMode: true
+					}
+				},
+				{
+					breakpoint: 1000,
+					settings: {
+						slidesToShow: 2,
+						slidesToScroll: 2
+					}
+				},
+				{
+					breakpoint: 1200,
+					settings: {
+						slidesToShow: 3,
+						slidesToScroll: 3
+					}
+				}
+			]
+		};
+
+		if(typeof $ !== 'undefined'){
+			window.cwrk.slick[slickSelector]['state'] = 'inited';
+			$(slickSelector).slick(window.cwrk.slick[slickSelector]);
+		}
+	</script>
+<?php endif; ?>

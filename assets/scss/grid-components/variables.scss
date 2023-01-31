@@ -1,0 +1,62 @@
+// Grid breakpoints
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+
+
+// Grid containers
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1170px
+) !default;
+
+@include _assert-ascending($container-max-widths, "$container-max-widths");
+
+
+// Grid columns
+
+$grid-columns:                12 !default;
+$grid-gutter-width:           30px !default;
+$grid-row-columns:            6 !default;
+
+$enable-grid-classes:                         true !default;
+
+
+// Utilities
+
+$displays: none, inline, inline-block, block, table, table-row, table-cell, flex, inline-flex !default;
+$overflows: auto, hidden !default;
+$positions: static, relative, absolute, fixed, sticky !default;
+$user-selects: all, auto, none !default;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default;
+$spacers: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$spacers: map-merge(
+	(
+		0: 0,
+		1: ($spacer * .25),
+		2: ($spacer * .5),
+		3: $spacer,
+		4: ($spacer * 1.5),
+		5: ($spacer * 3)
+	),
+$spacers
+);

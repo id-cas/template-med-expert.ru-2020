@@ -1,0 +1,65 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$scope = $this->getScopeVars();
+	$mode = $scope['isDebug'] ? 'none' : 'min';
+} ?>
+
+<?php if(isset($scope['G-RECAPTCHA'])): ?>
+	<script>
+		window.cwrk = window.cwrk || {};
+		window.cwrk.recaptcha = window.cwrk.recaptcha || {};
+		window.cwrk.recaptcha.url = "<?= $scope['G-RECAPTCHA']['URL'] ?>";
+		window.cwrk.recaptcha.key = "<?= $scope['G-RECAPTCHA']['KEY'] ?>";
+		window.cwrk.recaptcha.class = "<?= $scope['G-RECAPTCHA']['CLASS'] ?>";
+	</script>
+<?php endif; ?>
+
+<?php {
+    $scripts = [
+	    'third' => [
+		    'third', 'none',
+		    'templates/main/assets/js/thirdparty/jquery-3.5.1.min.js',
+			'templates/main/assets/js/thirdparty/lazyload.min.js',
+			'templates/main/assets/js/thirdparty/swiper.min.js',
+			'templates/main/assets/js/thirdparty/jquery.fancybox.min.js',
+	    ],
+
+        'site' => [
+            'site', $mode,
+            'templates/main/assets/js/site/select.init.js',
+            'templates/main/assets/js/site/lazy.init.js',
+            'templates/main/assets/js/site/lazy.html.js',
+            'templates/main/assets/js/site/init.fancybox.js',
+            'templates/main/assets/js/site/popup.js',
+            'templates/main/assets/js/site/gmap.init.js',
+            'templates/main/assets/js/site/pagination.js',
+            'templates/main/assets/js/site/specialist.filter.js',
+			'templates/main/assets/js/site/faq.js',
+            'templates/main/assets/js/site/recaptcha.js',
+            'templates/main/assets/js/site/common.js',
+        ],
+
+		'search.third' => [
+			'search.third', 'none',
+			'templates/main/assets/js/thirdparty/mark.min.js',
+		],
+
+		'search' => [
+			'search', $mode,
+			'templates/main/assets/js/site/search.highlight.js',
+		],
+
+		'pwa' => [
+			'pwa', $mode,
+			'templates/main/assets/js/pwa/install.js',
+		],
+    ];
+
+    foreach ( $variables as $scriptGroup ){
+        $scriptFile = $this->macros( 'custom', 'js2min', $scripts[$scriptGroup] );
+        echo '<script type="text/javascript" src="' . $scriptFile . '" defer=""></script>';
+    }
+}
+?>

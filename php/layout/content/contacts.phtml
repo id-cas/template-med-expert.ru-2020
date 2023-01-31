@@ -1,0 +1,48 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	list($name, $phone, $address, $email) =
+		$this->properties($variables['page']['obj'], ['main_office_name', 'main_office_phone', 'main_office_address', 'main_office_email']);
+} ?>
+
+<section class="contacts">
+	<div class="container">
+		<div class="inner">
+			<div class="contacts-title">
+				Контакты
+			</div>
+			<div class="contacts-main">
+				<?php if(!empty($name)): ?>
+					<div class="contacts-main-title"><?= $name ?></div>
+				<?php endif; ?>
+
+				<?php if(!empty($phone)): ?>
+					<a href="tel:<?= preg_replace('/\(|\)|\-|\s/', '', $phone) ?>" class="contacts-phone">
+						<img src="/resources/images/phone-ico.svg" alt="ico">
+						<span><?= $phone ?></span>
+					</a>
+				<?php endif; ?>
+
+				<?php if(!empty($address)): ?>
+					<div class="contacts-address"><?= $address ?></div>
+				<?php endif; ?>
+
+				<?php if(!empty($email)): ?>
+					<a href="mailto:<?= $email ?>" class="contacts-email"><?= $email ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<?= $this->render($variables, 'modules/content/clinics'); ?>
+
+
+<section class="clinics-map">
+	<?php // Map ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="content/map">
+		<div class="plholder" style="width: 100%; padding-top: 38.5%;"></div>
+	</div>
+</section>

@@ -1,0 +1,33 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+	$pageId = (int) $variables['page_id'];
+	$params = isset($variables['params']) ? $variables['params'] : null;	// для запроса со страницы Клиники (поверх стандратных getRequest)
+
+	$specialists = $this->parseData($this->macros('catalog', 'getSmartCatalogCustom', [null, $pageId, null, null, 1, false, true, $params], ['specialization', 'photo', 'h1']));
+
+	$p = getRequest('p');
+	$p = !empty($p) ? intval($p) : 0;
+} ?>
+
+<?php if(isset($specialists['lines']) && count($specialists['lines'])): ?>
+
+	<div class="js--items row">
+		<?php foreach($specialists['lines'] as $item): ?>
+			<?= $this->render($item, 'modules/catalog/specialist_item'); ?>
+		<?php endforeach; ?>
+	</div>
+
+	<?= $this->render([
+		'total' => $specialists['total'],
+		'per_page' => $specialists['per_page'],
+		'p' => $p,
+	], 'utils/pagination'); ?>
+
+<?php else: ?>
+
+	<div class="s-title">Никого не найдено</div>
+
+<?php endif; ?>
+

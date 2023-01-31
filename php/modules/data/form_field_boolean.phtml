@@ -1,0 +1,35 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $type = isset( $variables[ "type" ] ) ? $variables[ "type" ] : "checkbox";  ?>
+<?php if ( $type === "boolean" ) $type = "checkbox"; ?>
+
+<label class="boolean boolean--checkbox boolean--L<?php if ( isset( $variables[ "required" ] ) ): ?> boolean--required<?php endif; ?>">
+    <input
+        <?php if ( isset( $variables[ "id" ] ) ): ?>id="form-element-<?php echo $variables[ "id" ]; ?>"
+        <?php else: ?>id="form-element-<?php echo $variables[ "name" ]; ?>"<?php endif; ?>
+
+        class="boolean__input boolean--checkbox__input<?php if ( isset( $variables[ "class" ] ) ) echo " ". $variables[ "class" ] ?>"
+        type="<?php echo $type; ?>"
+
+        <?php if ( isset( $variables[ "input_name" ] ) ): ?>name="<?php echo $variables[ "input_name" ]; ?>"
+        <?php else: ?>name="<?php echo $variables[ "name" ]; ?>"<?php endif; ?>
+
+
+	    <?php if( $type == "checkbox" ): ?>
+	        value = "1"
+		    checked="checked"
+	        <?php echo ( $variables[ "value" ] === 1) ? "checked": ""; ?>
+	    <?php endif; ?>
+
+	    <?php if( $type == "radio" ): ?>
+		    value = <?php echo $variables[ "value" ]; ?>
+		    <?php if ( isset( $variables[ "checked" ] ) ): ?>checked="checked"<?php endif; ?>
+	    <?php endif; ?>
+
+
+        <?php if ( isset( $variables[ "disabled" ] ) ): ?>disabled=""<?php endif; ?>
+        <?php if ( isset( $variables[ "required" ] ) ): ?>required=""<?php endif; ?>
+    />
+    <span class="boolean__indicator boolean--checkbox__indicator boolean--L__indicator"></span>
+    <span class="boolean__text boolean--L__text"><?php if ( isset( $variables[ "title" ] ) ): ?><?php echo $variables[ "title" ]; ?><?php else: ?><?php echo $this->translate( "l-" . $variables[ "name" ] ); ?><?php endif; ?></span>
+</label>

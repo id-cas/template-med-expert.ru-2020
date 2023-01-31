@@ -1,0 +1,16 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<div class="container">
+	<div class="row">
+		<div class="cell cell--X12 cell--M6 cell--L5">
+			<?php if (isset($variables['user']) && isset($variables['user']['type']) && $variables['user']['type'] !== 'guest'): ?>
+				<h1>Портал</h1>
+			<?php else: ?>
+				<h1><?php echo $variables['page']['header']; ?></h1>
+			<?php endif; ?>
+
+			<?= $this->render($variables, 'modules/users/'. $variables['method']); ?>
+		</div>
+	</div>
+</div>

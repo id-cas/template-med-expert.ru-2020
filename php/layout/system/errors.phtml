@@ -1,0 +1,18 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$items = $variables['items'] ? $variables['items'] : [];
+} ?>
+
+<h1>Ошибка</h1>
+<?php if(count($items) > 0): ?>
+	<ul>
+		<?php foreach($items as $item): ?>
+			<li><?= $item['message'] ?></li>
+		<?php endforeach; ?>
+	</ul>
+<?php else: ?>
+	<ul>
+		<li>Незвестная ошибка</li>
+	</ul>
+<?php endif; ?>

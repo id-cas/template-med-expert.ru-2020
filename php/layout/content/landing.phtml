@@ -1,0 +1,67 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$page = $variables['page']['obj'];
+	list($h1, $content) = $this->properties($page, ['h1', 'content']);
+} ?>
+
+<section class="swiper-container">
+	<?php // Swiper slider ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="slider/main_page">
+		<div class="plholder" style="width: 100%; padding-top: 24.5%; min-height: 240px;"></div>
+	</div>
+</section>
+
+<section class="s-blog">
+	<?php // News ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="news/lastlist_main_page">
+		<?= $this->render(['mode' => 'placeholder'], 'modules/news/lastlist'); ?>
+	</div>
+</section>
+
+<?php if(!empty($content)): ?>
+	<section class="section-content">
+		<div class="container">
+			<div class="inner">
+				<h1 class="s-title"><?= $h1 ?></h1>
+			</div>
+			<div class="content">
+				<?= $this->parseWysiwig($content, $this) ?>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>
+
+<?php // Banners ?>
+<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="banners/insert" data-params="<?= $this->htmlParams(['page_id' => $variables['page']['id'], 'position' => 'content_block']) ?>">
+	<?php echo $this->render(['mode' => 'placeholder'], 'modules/banners/insert'); ?>
+</div>
+
+<section class="clinics-map">
+	<div class="container">
+		<div class="s-title">Клиники и отделения</div>
+	</div>
+
+	<?php // Map ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="content/map">
+		<div class="plholder" style="width: 100%; padding-top: 38.5%;"></div>
+	</div>
+</section>
+
+<?php /** Специалисты */ ?>
+<?php if($this->getPageByPath('specialisty')): ?>
+	<section>
+		<div class="container">
+			<div class="s-title">Специалисты</div>
+		</div>
+
+		<div class="m-specialists">
+			<div class="container">
+				<?php // Specializations ?>
+				<div class="lazy-html lazy-html--init lazy-html--modereplace" data-path="catalog/specialization">
+					<div class="plholder" style="width: 100%; padding-top: 38.5%;"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>

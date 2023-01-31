@@ -1,0 +1,19 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	// Меню
+	$menu = $this->parseData($this->macros('menu', 'draw', ['footer_main']));
+} ?>
+
+<ul class="footer-nav">
+	<?php foreach($menu['item'] as $item): ?>
+		<li>
+			<?php if($variables['request-uri'] !== $item['link']): ?>
+				<a class="link" href="<?= $item['link'] ?>"><?= $item['name'] ?></a>
+			<?php else: ?>
+				<span class="link active"><?= $item['name'] ?></span>
+			<?php endif; ?>
+		</li>
+	<?php endforeach; ?>
+</ul>

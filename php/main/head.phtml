@@ -1,0 +1,70 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+	$headMetrics = $settings->getValue('head_metrics');
+
+	if ($variables['page']['obj']) {
+		$noIndex = !!$this->property($variables['page']['obj'], 'robots_deny');
+	}
+
+	/** Закрыть от индексации страницы пагинации */
+	$pagination = getRequest('p');
+	if(isset($pagination) && !empty($pagination)){
+		$noIndex = true;
+	}
+
+	if($variables['module'] === 'filemanager'){
+		$noIndex = true;
+	}
+
+	if($variables['module'] === 'content' && $variables['method'] === 'notfound'){
+		$noIndex = true;
+	}
+
+	$canonicalLink = $this->macros('custom', 'getCanonicalLink', [$variables['page']['id']]);
+} ?>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone=no">
+
+    <?php if($variables['page']): ?>
+        <meta property="og:url" content="<?= $variables['page']['url']; ?>"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="<?= $variables['page']['title']; ?>"/>
+        <meta property="og:description" content="<?= $variables['description']; ?>"/>
+
+        <meta name="keywords" content="<?= $variables['keywords']; ?>"/>
+        <meta name="description" content="<?= $variables['description']; ?>"/>
+    <?php endif; ?>
+	
+    <title><?= $variables['page']['title']; ?></title>
+    <link rel="icon" type="image/png" href="/favicon.php"/>
+
+
+	<?php if (isset($variables['page']) && isset($variables['page']['id']) && !is_null($variables['page']['id'])): ?>
+
+		<link rel="canonical" href="<?= $canonicalLink; ?>"/>
+
+		<?= $this->render($this->macros('custom', 'navibar'), 'utils/breadcrumbs-jsonld'); ?>
+
+		<?php if (isset($noIndex) && boolval($noIndex) === true): ?>
+			<meta name="robots" content="noindex"/>
+		<?php endif; ?>
+
+	<?php else: ?>
+
+		<meta name="robots" content="noindex"/>
+
+	<?php endif; ?>
+
+	<?= $this->render($variables, 'main/manifest.head'); ?>
+
+    <?= $this->render(['main'], 'main/styles'); ?>
+
+	<?= $headMetrics; ?>
+</head>

@@ -1,0 +1,46 @@
+<?php /** @var umiTemplaterPHP $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$settings = $variables['SITE_SETTINGS'];
+
+	$host = cmsController::getInstance()->getCurrentDomain()->getHost();
+	$host = getServerProtocol(). "://{$host}";
+
+	$name = $settings->getValue('manifest_name');
+	$shortName = $settings->getValue('manifest_short_name');
+	$themeColor = $settings->getValue('manifest_theme_color');
+	$display = $settings->getValue('manifest_display');
+	$description = $settings->getValue('manifest_description');
+	$scope = $settings->getValue('manifest_scope');
+	$startUrl = $settings->getValue('manifest_start_url');
+	$startUrl = $settings->getValue('manifest_start_url');
+	$icon = $settings->getValue('manifest_icon');
+	$iconsSizes = $settings->getValue('manifest_icons_sizes');
+}?>
+
+<link rel="manifest" href="/manifest/">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="<?= $name ?>">
+<meta name="apple-mobile-web-app-title" content="<?= $shortName ?>">
+<meta name="theme-color" content="<?= $themeColor ?>">
+<meta name="msapplication-navbutton-color" content="<?= $themeColor ?>">
+<meta name="msapplication-navbutton-color" content="<?= $themeColor ?>">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="msapplication-starturl" content="<?= $host ?>/">
+
+<?php if($srcBiggestIconPath = $icon->getFilePath()): ?>
+
+	<?php $iconSizes = explode(',', trim($iconsSizes));; ?>
+	<?php foreach ($iconSizes as $iconSize): ?>
+		<?php {
+			list($width, $height) = explode('x', $iconSize);
+			$resized = $this->macros('custom', 'imageToFrame', [$srcBiggestIconPath, $width, $height, 100, 'transparent', false, 16, 16]);
+		} ?>
+		<link rel="icon" sizes="<?= $iconSize ?>" href="<?= $host. $resized['src'] ?>">
+		<link rel="apple-touch-icon" sizes="<?= $iconSize ?>" href="<?= $host. $resized['src'] ?>">
+	<?php endforeach; ?>
+
+<?php endif; ?>
+

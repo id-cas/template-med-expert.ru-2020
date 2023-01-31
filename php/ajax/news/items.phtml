@@ -1,0 +1,33 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+	$pageId = (int) $variables['page_id'];
+	$params = isset($variables['params']) ? $variables['params'] : null;	// для запроса со страницы Клиники (поверх стандратных getRequest)
+
+	$news = $this->parseData($this->macros('news', 'lastlist', [$pageId, null, null, false], ['header_pic']));
+
+	$p = getRequest('p');
+	$p = !empty($p) ? intval($p) : 0;
+} ?>
+
+<?php if(isset($news['items']) && count($news['items'])): ?>
+
+	<div class="js--items row">
+		<?php foreach($news['items'] as $item): ?>
+			<?= $this->render($item, 'modules/news/item'); ?>
+		<?php endforeach; ?>
+	</div>
+
+	<?= $this->render([
+		'total' => $news['total'],
+		'per_page' => $news['per_page'],
+		'p' => $p,
+	], 'utils/pagination'); ?>
+
+<?php else: ?>
+
+	<div class="s-title">Ничего не найдено</div>
+
+<?php endif; ?>
+

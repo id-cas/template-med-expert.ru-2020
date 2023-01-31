@@ -1,0 +1,29 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $this->parseData($variables);
+} ?>
+<section class="article">
+	<div class="container">
+		<div class="inner">
+			<div class="article-container">
+				<h1 class="article-header">Обнаружены ошибки:</h1>
+				<div class="article-content">
+					<?php if(isset($variables['items']) && count($variables['items'])): ?>
+						<ul>
+							<?php foreach($variables['items'] as $item): ?>
+								<li>
+									<?php if(is_array($item)): ?>
+										<?= $item['message'] ?>
+									<?php else: ?>
+										<?= $item ?>
+									<?php endif; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

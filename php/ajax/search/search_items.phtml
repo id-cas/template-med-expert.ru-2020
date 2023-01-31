@@ -1,0 +1,43 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+
+	$variables = $_POST;
+
+	$p = getRequest('p');
+	$p = !empty($p) ? intval($p) : 0;
+
+	// Товары найденные через поиск
+	$catalog = $this->parseData($this->macros('search', 'search_do', [null, $scope['search_string'], '55 56', 'prices'], []));
+	// $content = $this->parseData($this->macros('search', 'search_do', [null, $scope['search_string'], '59 142 151 155 156'], []));
+	// $this->dump($catalog);
+
+	$items = [];
+	if (isset($catalog['lines'])) {
+		$items = $catalog['lines'];
+	}
+	elseif (isset($catalog['items'])){
+		$items = $catalog['items'];
+	}
+}?>
+
+
+<?php if(count($items) > 0): ?>
+
+	<div class="js--items" data-page="<?= $p ?>">
+		<?php $catalog['is_search'] = true; ?>
+		<?= $this->render($catalog, 'modules/catalog/services_items') ?>
+	</div>
+
+	<?= $this->render([
+		'total' => $catalog['total'],
+		'per_page' => $catalog['per_page'],
+		'p' => $p,
+	], 'utils/pagination'); ?>
+
+<?php else: ?>
+
+	<div class="s-title">По запросу "<b><?= $scope['search_string'] ?></b>" ничего не найдено</div>
+
+<?php endif; ?>

@@ -1,0 +1,159 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$page = $variables['page']['obj'];
+	list($photo, $specializations, $clinics) = $this->properties($page, ['photo', 'specialization', 'job_clinics']);
+	list($about, $education, $skills, $services) = $this->properties($page, ['about', 'education', 'skills', 'services']);
+	list($btnSignUpHidden) = $this->properties($page, ['hide_btn_signup']);
+
+	foreach($specializations as $specId){
+		$spec[] = umiObjectsCollection::getInstance()->getObject($specId)->getName();
+	}
+
+
+} ?>
+
+<section class="specialist">
+	<div class="container">
+		<div class="inner">
+			<div class="specialist-top<?php if(!empty($btnSignUpHidden) && !!$btnSignUpHidden): ?> specialist-top-center<?php endif; ?>">
+				<div class="specialist-top-info">
+					<h1 class="specialist-name"><?= $variables['page']['name'] ?></h1>
+					<div class="specialist-specialty"><?php if(isset($spec)): ?><?= implode(', ', $spec) ?><?php endif; ?></div>
+					<?php foreach($clinics as $clinic): ?>
+						<a href="<?= $this->getPathById($clinic->getId()); ?>" class="specialist-services-location">
+							<img src="/resources/images/map-pin.svg" alt="ico"/>
+							<span><?= $clinic->getName(); ?></span>
+						</a>
+					<?php endforeach; ?>
+				</div>
+				<div class="specialist-photo">
+					<?php if(isset($photo)): ?>
+						<?= $this->render([
+							'class' => 'responsive',
+							'src' => $photo['src'],
+							'alt' => $variables['page']['name'],
+							'width' => 300,
+						], 'utils/thumb'); ?>
+					<?php endif; ?>
+				</div>
+				<?php if(!(!empty($btnSignUpHidden) && !!$btnSignUpHidden)): ?>
+					<div class="specialist-contacts">
+						<a class="border-btn" href="#" onclick="event.preventDefault(); window.open('https://mdx39.ru/', '_blank');">
+							<span>Записаться на прием</span>
+						</a>
+					</div>
+				<?php endif; ?>
+			</div>
+			<?php if(!empty($about)): ?>
+				<div class="specialist-info">
+					<h2 class="specialist-info-title">О специалисте</h2>
+					<div class="specialist-info-content"><?= $this->parseWysiwig($about, $this) ?></div>
+				</div>
+			<?php endif; ?>
+
+
+			<?php if(!empty($services)): ?>
+				<?php {
+					$providedServices = [];
+
+					foreach($services as $service){
+						$servicePageId = $service->getId();
+
+						$serviceObj = $service->getObject();
+						$typeId = $serviceObj->getTypeId();
+						$type = umiObjectTypesCollection::getInstance()->getType($typeId);
+
+						if(!($type instanceof umiObjectType)){
+							continue;
+						}
+
+						$typeGUID = $type->getGUID();
+
+						// Если это раздел услуги, то получаем все дочерние услуги
+						if($typeGUID === 'catalog-category'){
+							// CATEGORY
+
+							$serviceCategoryName = '';
+							$serviceCategoryPage = $this->getPageById($servicePageId);
+							if($serviceCategoryPage instanceof umiHierarchyElement){
+								$serviceCategoryName = $serviceCategoryPage->getName();
+							}
+
+							$subServices = $this->parseData($this->macros('catalog', 'getSmartCatalogCustom', [null, $servicePageId, null, true, 3]));
+
+							if(isset($subServices['lines']) && count($subServices['lines'])){
+								foreach($subServices['lines'] as $subService){
+									$subServiceName = $subService['text'];
+									$subServiceCleanName = preg_replace('/^[A-Z]|[А-Я]+\d{2}\.\d{3}\.\d{3}\s/', '', $subServiceName);
+									$subServiceCode = preg_replace("/\s?{$subServiceCleanName}/", '', $subServiceName);
+
+									//$providedServices[$subService['id']] = "{$subServiceCleanName} {$subServiceCode}";
+									$providedServices[$subService['id']] = !empty($serviceCategoryName) ? "{$serviceCategoryName}, {$subServiceCleanName}" : "{$subServiceCleanName}";
+								}
+							}
+
+						}
+						else {
+							// OBJECT
+
+
+							$serviceName = $service->getName();
+							$serviceCleanName = preg_replace('/^[A-Z]|[А-Я]+\d{2}\.\d{3}\.\d{3}\s/', '', $serviceName);
+							$serviceCode = preg_replace("/\s?{$serviceCleanName}/", '', $serviceName);
+
+							//$providedServices[$servicePageId] = "{$serviceCleanName} {$serviceCode}";
+							$providedServices[$servicePageId] = "{$serviceCleanName}";
+						}
+					}
+
+					$providedServices = array_flip($providedServices);
+					ksort($providedServices);
+					$providedServices = array_flip($providedServices);
+
+					// $this->dump($providedServices);
+				} ?>
+			<?php endif; ?>
+
+			<?php if(isset($providedServices) && is_array($providedServices) && count($providedServices)): ?>
+				<div class="specialist-info">
+					<div class="specialist-info-title">Услуги и цены</div>
+					<div class="specialist-info-content">
+						<div class="specialist-services">
+								<?php foreach($providedServices as $srvId => $srvName): ?>
+									<?php {
+										$servicePage = umiHierarchy::getInstance()->getElement($srvId);
+										if(!($servicePage instanceof umiHierarchyElement)){
+											continue;
+										}
+
+										list($price) = $this->properties($servicePage, ['price']);
+									} ?>
+									<div class="specialist-services-row">
+										<div class="specialist-services-name"><?= $srvName ?></div>
+										<div class="specialist-services-price"><?= $price ?> руб.</div>
+									</div>
+								<?php endforeach; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if(!empty($education)): ?>
+				<div class="specialist-info">
+					<h2 class="specialist-info-title">Образование</h2>
+					<div class="specialist-info-content"><?= $this->parseWysiwig($education, $this) ?></div>
+				</div>
+			<?php endif; ?>
+
+			<?php if(!empty($skills)): ?>
+				<div class="specialist-info">
+					<h2 class="specialist-info-title">Опыт работы</h2>
+					<div class="specialist-info-content"><?= $this->parseWysiwig($education, $this) ?></div>
+				</div>
+			<?php endif; ?>
+
+		</div>
+	</div>
+</section>

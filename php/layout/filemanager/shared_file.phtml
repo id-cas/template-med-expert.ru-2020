@@ -1,0 +1,33 @@
+<?php /** @var umiTemplaterPHP $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php
+	$sharedFile= $this->macros('filemanager', 'shared_file', array( $variables[ "page" ][ "id" ] ) );
+?>
+
+
+<section class="article">
+	<div class="container">
+		<div class="inner">
+			<div class="article-container">
+				<?php if(isset($sharedFile['download_link'])): ?>
+					<h1 class="article-header">Внимание скоро начнется скачивание файла</h1>
+					<div class="article-content">
+						<p>&#160;</p>
+						<p>Если скачивание не началось, перейдите <a href="<?=$sharedFile['download_link']?>">по ссылке</a></p>
+						<p>&#160;</p>
+					</div>
+				<?php else: ?>
+					<h1 class="article-header">Запрашиваемый файл поврежден или отсутсвует на сервере</h1>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</section>
+
+<?php if(isset($sharedFile['download_link'])): ?>
+	<script languge="text/javascript">
+		window.setTimeout('document.location.href="<?= $sharedFile['download_link'] ?>"', 3000);
+	</script>
+<?php endif; ?>
+

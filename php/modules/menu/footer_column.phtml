@@ -1,0 +1,80 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	// Выбереме все меню
+	$menus = new selector('objects');
+	$menus->types('object-type')->id(56);
+
+	$footerMenus = [];
+	foreach($menus as $menu){
+		$name = $menu->getName();
+		$menuId = $menu->getValue('menu_id');
+
+		$colMenu = [];
+		preg_match('/^footer_col_(\d+)_row_(\d+)$/', $menuId, $colMenu);
+		if(!(is_array($colMenu) && count($colMenu) === 3)){
+			continue;
+		}
+
+		$colNum = $colMenu[1];
+		$rowNum = $colMenu[2];
+
+		$footerMenus[$colNum][$rowNum] = [
+			'name' => preg_replace('/^Подвал\:\s?/i', '', $name),
+			'menu_id' => $menuId,
+		];
+	}
+
+	if(count($footerMenus) > 0){
+		// Отсортируем по меню по колонкам
+		ksort($footerMenus, SORT_NUMERIC);
+
+		// Отсортируем меню по строкам внутри каждой колонки
+		for($i = 0; $i < count($footerMenus); $i++){
+			ksort($footerMenus[$i], SORT_NUMERIC);
+		}
+	}
+
+} ?>
+
+
+<?php for($i = 0; $i < 3; $i++): ?>
+
+	<div class="footer-main-col">
+		<?php if(isset($footerMenus[$i]) && count($footerMenus[$i])): ?>
+
+				<?php foreach($footerMenus[$i] as $rowNum => $data): ?>
+					<?php {
+						// Меню
+						$menu = $this->parseData($this->macros('menu', 'draw', [$data['menu_id']]));
+					} ?>
+
+					<div class="footer-list">
+						<div class="footer-list-title">
+							<span><?= $data['name'] ?></span>
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M5 7.5L10 12.5L15 7.5"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div>
+						<ul>
+							<?php if(isset($menu['item'])): ?>
+								<?php foreach($menu['item'] as $item): ?>
+									<li>
+										<?php if($variables['request-uri'] !== $item['link']): ?>
+											<a class="link" href="<?= $item['link'] ?>"><?= $item['name'] ?></a>
+										<?php else: ?>
+											<span class="link active"><?= $item['name'] ?></span>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</ul>
+					</div>
+
+				<?php endforeach; ?>
+
+		<?php endif; ?>
+	</div>
+
+<?php endfor; ?>

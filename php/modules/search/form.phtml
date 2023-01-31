@@ -1,0 +1,8 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<form method="get" action="/search/search_do/" class="header-search-form">
+	<input type="text" name="search_string" placeholder="поиск по сайту" value="<?= getRequest('search_string'); ?>">
+	<button>
+		<img src="/resources/images/search.svg" alt="ico">
+	</button>
+</form>

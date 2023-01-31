@@ -1,0 +1,18 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $variables = $this->parseData( $variables ); ?>
+<?php if ( isset( $variables[ "url" ] ) ): ?>
+    <div class="form__element">
+        <label for="#form-element-captcha" class="form__label form__label--required"><?php echo $this->translate( "l-enter-captcha" ); ?>:</label>
+        <div class="row row--align row--margin-none table">
+            <div class="cell cell--X11 cell--top cell--padding-none table__cell">
+                <input id="#form-element-captcha" type="text" name="captcha" class="input" />
+            </div>
+            <div class="cell cell--X1 cell--top cell--padding-none cell--padding-left table__cell">
+                <a class="js--onclick-captchaReset" title="<?php echo $this->translate( "l-reset-captcha" )?>">
+                    <img class="captcha-image js--captchaReset" src="<?php echo $variables[ "url" ][ "value" ] . $variables[ "url" ][ "random-string" ]?>"/>
+                </a>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

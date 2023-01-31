@@ -1,0 +1,15 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$categoryItems = (isset($variables['items']) && count($variables['items'])) ? $variables['items'] : [];
+} ?>
+
+<?php foreach($categoryItems as $categoryItem): ?>
+	<section class="prices">
+		<div class="container">
+			<div class="s-title"><?= $categoryItem['text'] ?></div>
+			<?= $this->render($this->macros('catalog', 'getCategoryList', [null, $categoryItem['id'], 99999, true]), 'modules/catalog/services_items') ?>
+		</div>
+	</section>
+<?php endforeach; ?>

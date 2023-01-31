@@ -1,0 +1,152 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+	$settings = $scope['SITE_SETTINGS'];
+
+	$cart = $this->parseData( $this->macros( "emarket", "cart" ) );
+} ?>
+
+<h1><?php echo $variables[ "page" ][ "header" ]; ?></h1>
+<?php if ( isset( $cart[ "items" ] )  && count( $cart[ "items" ] ) ): ?>
+	<div class="cart">
+		<?php foreach ( $cart[ "items" ] as $n => $item ): ?>
+			<?php list( $h1, $code, $description ) = $this->properties( $item[ "page" ], array( "h1", "code", "description" ) ); ?>
+			<?php
+				$photo = [];
+
+				$itemPhotos = $this->properties($item['page'], ['photo_0', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5']);
+				foreach($itemPhotos as $itemPhoto){
+					if((isset($itemPhoto) && !empty($itemPhoto)) && (isset($itemPhoto['src']) && !empty($itemPhoto['src']))){
+						$photo = $itemPhoto;
+						break;
+					}
+				}
+
+				if(!count($photo)){
+					$photo['src'] = 'no-photo-stub';
+				}
+			?>
+			<div class="row row--align cart-item" id="js--listItem-<?php echo $item[ "id" ]; ?>">
+				<div class="cell cell--top cell--L6 cell--X12 cell--padding-bottom ">
+					<div class="row">
+						<div class="cell cell--L3 cell--M3 cell--S6 cell--X12">
+							<div class="cart-img">
+								<a class="js--onclick-fancybox" href="<?= $photo['src'] ?>">
+									<?php echo $this->render(
+										array(
+											"class" => "responsive img-bordered",
+											"src" => $photo["src"],
+											"alt" => $h1,
+											"width" => 130,
+											"height" => 130,
+										), "utils/thumb" ); ?>
+								</a>
+							</div>
+						</div>
+						<div class="cell cell--L9 cell--M9 cell--S6 cell--X12">
+							<div>
+								<a href="<?= $this->macros('custom', 'getCanonicalLink', [$item['page']->getId()]); ?>">
+									<div class="cart-item-name"><?php echo $h1; ?></div>
+									<?php if ( isset($code) && $code !== "" ): ?>
+										<span class="cart-item-code item__code item__code--abs"><?php echo $this->translate( "l-code" ) . ": ". $code; ?></span>
+									<?php endif; ?>
+								</a>
+							</div>
+							<div>
+                                <span class="small color-gray">
+	                                <?php
+	                                if(trim($description) !== ''){
+		                                $description = trim(preg_replace('/\s\s+/', ' ', $description));
+		                                $description = str_replace(["\n\r", "\n", "\r", "\t"], '', $description);
+		                                $description = str_replace(['<br>', '<br/>'], ' ', $description);
+
+		                                echo mb_substr($description, 0, 110). ' ...' ;
+	                                }
+	                                ?>
+                                </span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cell cell--top cell--L5 cell--M6 cell--X12 ">
+					<div class="row row--align row--X-text-center row--S-text-right row--stretch-bottom">
+						<div class="cell cell--top cell--X6 cell--L6 cell--padding-bottom cell--X-text-left">
+							<div class="prices">
+								<small class="color-gray"><?php echo $this->translate( "l-price" ); ?></small>
+								<div class="price">
+	                                <?php
+										$actualPrice = isset($item[ "price" ][ "actual" ]) ? $item[ "price" ][ "actual" ] : 0;
+										echo $this->render( array( "price" => $actualPrice ), "modules/catalog/price" );
+									?>
+								</div>
+
+								<small class="color-gray"><?php echo $this->translate( "l-total-price" ); ?></small>
+								<div class="price">
+	                                <?php
+		                                $totalPrice = isset($item[ "total-price" ][ "actual" ]) ? $item[ "total-price" ][ "actual" ] : 0;
+		                                echo $this->render( array( "id" => $item[ "id" ], "price" => $totalPrice ), "modules/catalog/price" );
+	                                ?>
+	                            </div>
+							</div>
+						</div>
+						<div class="cell cell--top cell--X6 cell--L6 cell--padding-bottom cell--X-text-left">
+							<small class="color-gray"><?php echo $this->translate( "l-quantity" ); ?></small>
+							<form id="form_<?php echo $item[ "id" ]; ?>" class="js--onsubmit-itemToBasket" data-id="<?php echo $item[ "id" ]; ?>" action="/emarket/basket/put/item/<?php echo $item[ "id" ]; ?>" method="post">
+								<span class="btn btn--emarket-quantity btn--emarket-quantity__minus js--onlick-quantityMinus">-</span>
+
+								<div class="item__amount-emarket">
+									<?php echo $this->render( array( "id" => $item[ "id" ], "quantity" => $item[ "amount" ] ), "modules/catalog/quantity" ); ?>
+								</div>
+
+								<span class="btn btn--emarket-quantity btn--emarket-quantity__plus js--onlick-quantityPlus">+</span>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="cell cell--top cell--L1 cell--M6 cell--X12 cell--X-text-left">
+					<?php echo $this->render( array(
+						"data" => array("id" => $item["id"]),
+						"type" => "link",
+						// "link" => "/emarket/basket/remove/item/" . $item[ "id" ],
+						"text" => $this->translate( "l-delete" ),
+						"class" => array( "link" ),
+						"event" => "js--onlick-removeItem",
+					), "utils/button" ); ?>
+				</div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<?php if($emarketText = $settings->getValue('emarket_text')): ?>
+		<article class="article article--emarket"><?= $emarketText ?></article>
+	<?php endif; ?>
+	<div class="row row--align row--margin-none row--margin-top table">
+		<div class="cell cell--X12 cell--S9 cell--top cell--padding-none cell--padding-right table__cell">
+			<div class="cart-summary">
+				<div class="row row--X-text-right row--align">
+					<?php if ( $cart[ "discount_value" ] ): ?>
+						<div class="cell cell--top"></div>
+						<div class="cell cell--top"></div>
+					<?php endif; ?>
+					<div class="cell cell--top">
+						<span class="color-gray"><?php echo $this->translate( "l-summary" ); ?>:</span>
+						<span class="price"><?php echo $this->render( array( "id" => "summary", "price" => $cart[ "summary" ][ "price" ][ "actual" ] ), "modules/catalog/price" ); ?></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell cell--X12 cell--S3 cell--top cell--padding-none table__cell">
+			<?php echo $this->render( array(
+				"type" => "link",
+				"link" => "/emarket/purchase",
+				"text" => $this->translate( "l-purchasing-one-step" ),
+				"class" => array( "M", "primary", "block" )
+			), "utils/button" ); ?>
+		</div>
+	</div>
+
+<?php else: ?>
+	<h3><?php echo $this->translate( "h-cart-empty" ); ?></h3>
+	<p><?php echo $this->translate( "t-cart-empty" ); ?></p>
+<?php endif; ?>

@@ -1,0 +1,15 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$path = $this->getPathById($variables['page']['id']);
+	$path = ltrim($path, '/');
+	$path = rtrim($path, '/');
+	$path = preg_replace('/\//', '_', $path);
+
+	try {
+		echo $this->render($variables, "modules/catalog/category_{$path}");
+	}
+	catch (Exception $e) {
+		echo $this->macros('content', 'redirect', ['/']);
+	}
+} ?>

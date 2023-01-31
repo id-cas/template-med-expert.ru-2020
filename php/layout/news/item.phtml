@@ -1,0 +1,15 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	list($h1, $content) = $this->properties($variables['page']['obj'], ['h1', 'content']);
+} ?>
+<section class="article">
+	<div class="container">
+		<div class="inner">
+			<div class="article-container">
+				<h1 class="article-header"><?= $h1 ?></h1>
+				<div class="article-content"><?= $this->parseWysiwig($content, $this) ?></div>
+			</div>
+		</div>
+	</div>
+</section>

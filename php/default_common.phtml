@@ -1,0 +1,53 @@
+<?php {
+	/** Ошибки */
+	if($errors = $this->parseData($this->macros('system', 'listErrorMessages'))){
+		$layout_mode = $variables['module'] . '/' . $variables['method'];
+	}
+
+
+	/** Настройки сайта */
+	$settings = $variables['SITE_SETTINGS'];
+
+	// Метрика
+	$bodyMetrics = $settings->getValue('body_metrics');
+}?>
+
+
+<body style="display: none;">
+	<?= $this->render($variables, 'main/block_header'); ?>
+
+	<?= $bodyMetrics; ?>
+
+	<?php if (isset($errors) && is_array($errors)): ?>
+		<?= $this->render($errors, 'modules/system/errors'); ?>
+
+	<?php elseif ($variables['page']['is_default']): ?>
+		<?= $this->render($variables, 'layout/content/landing'); ?>
+
+	<?php else: ?>
+		<?= $this->render($variables, 'layout/content/page'); ?>
+
+	<?php endif; ?>
+
+
+	<?php // Banners ?>
+	<div class="lazy-html lazy-html--init lazy-html--modereplace silent" data-path="banners/insert" data-params="<?= $this->htmlParams(['page_id' => $variables['page']['id'], 'position' => 'footer_block']) ?>">
+		<?php // echo $this->render(['mode' => 'placeholder'], 'modules/banners/insert'); ?>
+	</div>
+
+	<?= $this->render($variables, 'main/block_footer'); ?>
+
+	<?= $this->render($variables, 'main/popup'); ?>
+
+	<?= $this->render(['third', 'site', 'pwa'], 'main/scripts'); ?>
+
+	<?php if($variables['module'] === 'search'): ?>
+		<?= $this->render(['search.third', 'search'], 'main/scripts'); ?>
+	<?php endif; ?>
+
+	<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+	<script>
+		// var sf = new Snowflakes();
+	</script>
+</body>
+

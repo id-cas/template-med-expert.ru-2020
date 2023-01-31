@@ -1,0 +1,65 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$settings = $variables['SITE_SETTINGS'];
+
+	// Логотип
+	$logoPic = $settings->getValue('logo_pic');
+	$logoPicX2 = $settings->getValue('logo_pic_x2');
+
+//	$logoName = $settings->getValue('logo_name');
+	$copyright = $settings->getValue('copyright');
+//	$companyName = $settings->getValue('company_name');
+
+
+	// Ссылка на внешний личный кабинет
+	$hdrBtnCabinet = $settings->getValue('hdr_btn_cabinet');
+} ?>
+
+
+<footer>
+	<div class="container">
+		<div class="inner">
+			<div class="footer-top">
+				<div class="footer-social">
+					<?= $this->render($variables, 'main/block_social'); ?>
+				</div>
+
+				<?php if($variables['request-uri'] !== ($variables['host']. '/')): ?>
+					<a href="/" class="footer-logo">
+						<img src="<?= $logoPic ?>" srcset="<?= $logoPicX2 ?> 2x" alt="logo">
+					</a>
+				<?php else: ?>
+					<span class="footer-logo">
+								<img src="<?= $logoPic ?>" srcset="<?= $logoPicX2 ?> 2x" alt="logo">
+							</span>
+				<?php endif; ?>
+
+				<a href="#" class="border-btn" onclick="event.preventDefault(); window.open('<?= $hdrBtnCabinet ?>', '_blank');" >
+					<span>Записаться на прием</span>
+				</a>
+			</div>
+
+			<div class="footer-main">
+				<div class="footer-main-col">
+					<?= $this->render($variables, 'modules/menu/footer_main'); ?>
+				</div>
+
+				<?= $this->render($variables, 'modules/menu/footer_column'); ?>
+			</div>
+
+		</div>
+
+		<div class="footer-bottom">
+			<div class="container">
+				<p>&copy;&nbsp;2005-<?= date('Y') ?>&nbsp;<?= $copyright ?></p>
+				<div class="made-by">
+					<p><a href="#" class="popup-btn" popup-id="popup-developers" style="margin-right: 13px"><u>Написать разработчикам</u></a></p>
+					<img src="/resources/images/logo-cwrk.png" alt="logo">
+					<p><a href="https://cwrk.ru/" target="_blank">Разработка сайта <u>Cowork</u></a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>

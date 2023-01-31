@@ -1,0 +1,7 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+} ?>
+
+<?= $this->render(['form' => $this->parseData($variables), 'action' => '/' . $scope['lang'] . '/webforms/send/'], 'modules/data/form'); ?>

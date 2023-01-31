@@ -1,0 +1,74 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php
+{
+    $variables = $this->parseData($variables);
+}
+?>
+
+<?php if (isset($variables["items"]) && isset($variables["id"])): ?>
+    <section class="layout__content-slider">
+        <div id="screenSlider" class="slider slider--screen">
+            <div class="slider__items js--init-slick"
+                 data-slick-slides-to-show="1"
+                 data-slick-slides-to-scroll="1"
+                 data-slick-infinite="true"
+                 data-slick-arrows="false"
+                 data-slick-dots="true"
+                 data-slick-append-dots="#screenSliderDots"
+                 data-slick-accessibility="false"
+                 data-slick-autoplay="true"
+                 data-slick-autoplay-speed="3800">
+                <?php foreach ($variables["items"] as $item): ?>
+                    <div class="slider__item">
+                        <div class="slider__container">
+                            <div class="slider__rectangle">
+                                <div class="slider__rectangle-center">
+                                    <div class="row">
+                                        <div class="cell cell--X7 cell--middle">
+
+                                            <div class="slider-content">
+                                                <h2 class="slider-content__heading slider-content__heading--heavy"><?php echo $item["properties"]["h1"]; ?></h2>
+                                                <h3 class="slider-content__heading slider-content__heading--extra"><?php echo $item["properties"]["add_heading"]; ?></h3>
+                                                <div class="slider-content__text   lead   to-L-hidden"><?php echo $item["properties"]["lead_text"]; ?></div>
+                                            </div>
+
+                                            <div class="from-L-visible">
+                                                <?php echo $this->render(array(
+                                                    "type" => "link",
+                                                    "text" => $item["properties"]["add_string"],
+                                                    "link" => $this->getLink($item["properties"]["link"][0]),
+                                                    "class"=> array("E", "rounded", "action", "light")
+                                                ), "utils/button"); ?>
+                                            </div>
+                                            <div class="from-L-hidden">
+                                                <?php echo $this->render(array(
+                                                    "type" => "link",
+                                                    "text" => $item["properties"]["add_string"],
+                                                    "link" => $this->getLink($item["properties"]["link"][0]),
+                                                    "class"=> array("M", "rounded", "action", "light")
+                                                ), "utils/button"); ?>
+                                            </div>
+                                        </div>
+                                        <div class="cell cell--X5 cell--middle">
+                                            <?php echo $this->render(array("class" => "responsive", "img" => $item["properties"]["header_pic"], "alt" => $item["properties"]["h1"]), "utils/image"); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="slider__dots slider--screen__dots">
+                <div class="slider__container">
+                    <div class="row line--margin-none">
+                        <div id="screenSliderDots" class="cell cell--X5 cell--Xo7 cell--padding-none"></div>
+                        <!--<div class="cell cell--M5 cell--Mo7 cell--no-padding"><div class="shadow"></div></div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>

@@ -1,0 +1,49 @@
+.breadcrumbs{
+	position: relative;
+	text-align: left;
+	background: #f8f8f8;
+	font-size: 0;
+
+	&-list {
+		@media screen and (max-width: 575px){
+			overflow-x: scroll;
+		}
+	}
+
+	&-items {
+		position: relative;
+		display: inline-block;
+		list-style: none;
+		margin-top: 15px;
+
+		@media screen and (max-width: 575px){
+			white-space: nowrap;
+		}
+	}
+
+	&-item {
+		display: inline-block;
+		position: relative;
+		margin-right: 20px;
+
+		&:after {
+			content: '/';
+			position: absolute;
+			top: 0px;
+			right: -12px;
+			font-size: 12px;
+		}
+
+		&:last-child {
+			margin-right: 0px;
+
+			&:after {
+				content: '';
+			}
+		}
+	}
+
+	&-link {
+		font-size: 12px;
+	}
+}

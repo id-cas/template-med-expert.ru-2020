@@ -1,0 +1,49 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $this->parseData($variables);
+	// echo $this->dump($variables);
+
+	$items = isset($variables['items']) ? $variables['items'] : [];
+	if(!(is_array($items) && count($items))){
+		return;
+	}
+
+	$groupId = $variables['id'];
+	$groupPage = $this->getPageById($groupId);
+	$groupH1 = $this->property($groupPage, 'h1');
+	$groupPageLink = $this->getPathById($groupId);
+}?>
+
+<div class="row justify-content-around py-3 advantages">
+		<?php foreach($items as $item): ?>
+			<?php {
+				$itemPage = $this->getPageById($item['id']);
+
+				$image = $this->parseWysiwig($this->property($itemPage, 'header_pic'), $this);
+				$title = $this->parseWysiwig($this->property($itemPage, 'h1'), $this);
+
+				$link = trim($this->property($itemPage, 'main_office_phone'));
+			} ?>
+
+			<div class="col-6 col-sm-6 col-md-3 col-lg-2 vh-100 my-3">
+				<button class="advantages-item" <?php if(preg_match('/^https?:\/\//', $link, $matches)): ?>onclick="window.open('<?= $link ?>', 'blank')"<?php endif; ?>>
+					<div class="advantages-item-img">
+						<?php if(isset($image) && !empty($image)): ?>
+							<?= $this->render([
+								'class' => 'responsive',
+								'src' => $image['src'],
+								'alt' => $title,
+								'height' => 250,
+								'width' => 250,
+							], 'utils/thumb'); ?>
+						<?php endif; ?>
+					</div>
+
+					<div class="advantages-item-title">
+						<?= $title; ?>
+					</div>
+				</button>
+			</div>
+		<?php endforeach; ?>
+</div>

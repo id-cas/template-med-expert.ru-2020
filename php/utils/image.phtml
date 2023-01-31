@@ -1,0 +1,17 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php if (isset($variables["img"]["src"]) && !empty($variables["img"]["src"])): ?>
+<img <?php echo isset($variables["id"]) ? "id=\"" . $variables["id"] . "\"" : ""; ?>
+     class="<?php echo isset($variables["class"]) ? $variables["class"] : ""; ?>"
+     src="<?php echo $variables["img"]["src"]; ?>"
+     width="<?php echo isset($variables["img"]["width"]) ? $variables["img"]["width"] : 0; ?>px"
+     height="<?php echo isset($variables["img"]["height"]) ? $variables["img"]["height"] : 0; ?>px"
+     alt="<?php echo isset($variables["alt"]) ? $variables["alt"] : ""; ?>"/>
+<?php else: ?>
+    <div class="banner banner--r1by1">
+        <div class="banner__inner">
+            <div class="placeholder placeholder--x placeholder--b"></div>
+        </div>
+    </div>
+<?php endif; ?>

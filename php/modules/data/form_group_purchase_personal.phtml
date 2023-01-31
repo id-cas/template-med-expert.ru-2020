@@ -1,0 +1,10 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php if ( isset( $variables[ "field" ] ) && count( $variables[ "field" ] ) ): ?>
+	<fieldset class="form__group" id="<?php echo $variables[ "name" ]; ?>">
+		<h5 class="form__group-title"><?php echo isset( $variables[ "title" ] ) ? $variables[ "title" ] : $this->translate( "h-" . $variables[ "name" ] ); ?></h5>
+		<?php foreach ( $variables[ "field" ] as $field ): ?>
+			<?php echo $this->render( $field, "modules/data/form_field" ); ?>
+		<?php endforeach; ?>
+	</fieldset>
+<?php endif; ?>

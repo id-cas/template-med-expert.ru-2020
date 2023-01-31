@@ -1,0 +1,68 @@
+<?php {
+	/** @var umiTemplaterPHP $this */
+	/** @var array $variables */
+
+	$scope = $this->getScopeVars();
+	$path = $variables['src'] ?? '/resources/images/placeholder-pixel.jpg';
+
+	$width = $variables['width'] ?? 0;
+	$height = $variables['height'] ?? 0;
+
+	$smallWidth = $variables['small-width'] ?? null;
+	$smallHeight = $variables['small-height'] ?? null;
+
+	$quality = $variables['quality'] ?? 100;
+	$background = $variables['background'] ?? '#e2edf2';
+	$watermark = $variables['watermark'] ?? true;
+
+	if (is_array($path)) {
+		$path = $path['src'] ?? $path;
+	}
+
+	if ($path[0] !== '/') {
+		$path = '/'. $path;
+	}
+
+	try {
+		$thumb = $this->macros('custom', 'imageToFrame', ['.'. $path, $width, $height, $quality, $background, $watermark, $smallWidth, $smallHeight]);
+	} catch (Exception $e) {
+		$path = '/resources/images/placeholder-pixel.jpg';
+		$thumb = $this->macros('custom', 'imageToFrame', ['.'. $path, $width, $height, $quality, $background, $watermark, $smallWidth, $smallHeight]);
+	}
+
+} ?>
+
+<?php if (isset($thumb['src'])): ?>
+
+	<?php if (isset($variables['return-src']) && $variables['return-src'] === true): ?>
+
+		<?= trim($thumb['src']); ?>
+
+	<?php elseif (isset($variables['return-thumb-data']) && $variables['return-thumb-data'] === true): ?>
+
+		<?=
+			json_encode([
+				'width' => $thumb['rWidth'],
+				'height' => $thumb['rHeight'],
+				'small' => $thumb['small'],
+				'src' => $thumb['src']
+			]);
+		?>
+
+	<?php else: ?>
+
+		<img class="lazy <?= isset($variables['class']) ? $variables['class'] : ''; ?>"
+		     src="<?= $thumb['small'] ?>"
+		     width="<?= $thumb['rWidth'] ?>"
+		     height="<?= $thumb['rHeight'] ?>"
+		     data-src="<?= $thumb['src'] ?>"
+		     data-width="<?= $thumb['rWidth'] ?>"
+		     data-height="<?= $thumb['rHeight'] ?>"
+		     <?php if(isset($variables['style'])): ?>style="<?= $variables['style'] ?>"<?php endif; ?>
+		     <?php if(isset($variables['title'])): ?>title="<?= $variables['title'] ?>"<?php endif; ?>
+		     <?php if(isset($variables['itemprop'])): ?>itemprop="<?= $variables['itemprop'] ?>"<?php endif; ?>
+		     alt="<?= $variables['alt'] ? $variables['alt'] : '' ?>"/>
+
+	<?php endif; ?>
+
+<?php endif; ?>

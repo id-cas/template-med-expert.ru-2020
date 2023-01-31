@@ -1,0 +1,15 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	list($roadMapCar, $roadMapBus) =
+		$this->properties($variables['page']['obj'], ['roadmap_on_car', 'roadmap_on_bus']);
+} ?>
+
+<div class="clinic-location">
+	<div class="clinic-location-title">На автомобиле</div>
+	<div class="clinic-location-content"><?= $this->parseWysiwig($roadMapCar, $this); ?></div>
+</div>
+<div class="clinic-location">
+	<div class="clinic-location-title">На общественном транспорте</div>
+	<div class="clinic-location-content"><?= $this->parseWysiwig($roadMapBus, $this); ?></div>
+</div>

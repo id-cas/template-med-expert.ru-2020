@@ -1,0 +1,7 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php $purchase = $this->macros( "emarket", "purchase" ); ?>
+<?php $purchase = $this->parseData( $purchase ); ?>
+<h1><?php echo $variables[ "page" ][ "header" ]; ?></h1>
+<?php echo $this->render( $purchase[ "purchasing" ][ "steps" ], "modules/emarket/steps" ); ?>
+<?php echo $this->render( $purchase, "modules/emarket/steps/" . $purchase[ "purchasing" ][ "stage" ] . "-" . $purchase[ "purchasing" ][ "step" ] ); ?>

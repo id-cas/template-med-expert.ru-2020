@@ -1,0 +1,11 @@
+<?php /** @var umiTemplaterPHP $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php if (isset($variables["items"]) && count($variables["items"])): ?>
+    <?php foreach ($variables["items"] as $item): ?>
+        <input type="hidden" name="system_email_to" value="<?= $item["id"]; ?>"/>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<input type="hidden" name="system_form_id" value="<?= $variables["form_id"]; ?>"/>
+<input type="hidden" name="ref_onsuccess" value="/webforms/posted/<?= $variables["form_id"]; ?>/"/>

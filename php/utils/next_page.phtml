@@ -1,0 +1,9 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php echo $this->render( array(
+    "type" => "link",
+    "link" => $this->getLink( $variables[ "page" ] ),
+    "text" => $this->translate( "l-next-news" ),
+    "class" => array( "M", "primary" ),
+    "sprite" => array( "after", "spr spr--arrow-2-right" )
+), "utils/button" ); ?>

@@ -1,0 +1,55 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+{
+    $id = isset( $variables[ "id" ] ) ? $variables[ "id" ] : time(  );
+    $id_full = "js--modal-" . $id;
+    $header = isset( $variables[ "header" ] ) ? $variables[ "header" ] : "";
+    $content = isset( $variables[ "content" ] ) ? $variables[ "content" ] : "";
+    $visible = ( isset( $variables[ "visible" ] ) && $variables[ "visible" ] === true ) ? true : false;
+
+    $class_name = "modal modal--fixed modal--hidden";
+
+    if ( isset( $variables[ "add_class" ] ) && is_array( $variables[ "add_class" ] ) ) {
+        foreach ( $variables[ "add_class" ] as $class )
+        {
+            $class_name.= " modal--" . $class;
+        }
+    }
+
+    if ( $visible ) {
+        $class_name.= "js--onload-showModal";
+    }
+}
+?>
+<div id="<?php echo $id_full; ?>" class="<?php echo $class_name; ?>">
+    <?php if ( $visible ): ?>
+        <script type="text/javascript">
+            window.addEventListener( 'load', function () {
+                Modal.showModal( document.getElementById( '<?php echo $id_full; ?>' ) );
+            } );
+        </script>
+    <?php endif; ?>
+    <div class="modal__center">
+        <div class="modal__body">
+            <div class="modal__header">
+                <div class="row row--margin-none row--align">
+                    <div id="js--modalHeader-<?php echo $id; ?>" class="cell cell--padding-none cell--X10 cell--middle">
+                        <?php echo $header; ?>
+                    </div>
+                    <div class="cell cell--padding-none cell--X2 cell--middle cell--X-text-right">
+                        <?php echo $this->render( array(
+                            "type" => "button",
+                            "data" => array( "target" => "#" . $id_full ),
+                            "class" => array( "primary", "mobile" ),
+                            "event" => "js--onclick-modalHide",
+                            "title" => $this->translate( "l-close" ),
+                            "sprite" => array( "before", "spr spr--times-big" )
+                        ), "utils/button" ); ?>
+                    </div>
+                </div>
+            </div>
+            <div id="js--modalContent-<?php echo $id; ?>" class="modal__content"><?php echo $content; ?></div>
+        </div>
+    </div>
+</div>

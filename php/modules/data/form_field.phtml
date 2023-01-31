@@ -1,0 +1,41 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php
+if ( preg_match( "/grab_(.+)/", $variables[ "name" ], $matches ) ) {
+    switch ( $matches[ 1 ] ) {
+        case "link": default: {
+            $value = $_SERVER[ "REQUEST_URI" ];
+        } break;
+    }
+    $variables[ "type" ] = "hidden";
+}
+?>
+<?php if ( isset( $variables[ "name" ] ) ): ?>
+    <?php if ( $variables[ "type" ] === "hidden" ): ?>
+        <?php echo $this->render( $variables, "modules/data/form_field_text" ); ?>
+    <?php elseif ( $variables[ "type" ] === "boolean" ): ?>
+        <?php echo $this->render( $variables, "modules/data/form_field_boolean" ); ?>
+    <?php elseif ( $variables[ "type" ] === "tree" ): ?>
+        <?php echo $this->render( $variables, "modules/data/form_field_tree" ); ?>
+    <?php else: ?>
+        <div class="form__element">
+            <?php echo $this->render( $variables, "modules/data/form_field_label" ); ?>
+            <?php if ( $variables[ "type" ] === "text" ): ?>
+                <?php echo $this->render( $variables, "modules/data/form_field_textarea" ); ?>
+            <?php elseif ( $variables[ "type" ] === "relation" ): ?>
+                <?php echo $this->render( $variables, "modules/data/form_field_select" ); ?>
+            <?php elseif ( $variables[ "type" ] === "color" ): ?>
+                <?php echo $this->render( $variables, "modules/data/form_field_color" ); ?>
+            <?php else: ?>
+                <?php echo $this->render( $variables, "modules/data/form_field_text" ); ?>
+                <?php if ( isset( $variables[ "confirm" ] ) ): ?>
+                    <?php
+                        $variables[ "name" ] = $variables[ "name" ] . "_confirm";
+                        if ( isset( $variables[ "confirm_tip" ] ) ) $variables[ "tip" ] = $variables[ "confirm_tip" ];
+                    ?>
+                    <?php echo $this->render( $variables, "modules/data/form_field_text" ); ?>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

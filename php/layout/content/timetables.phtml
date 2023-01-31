@@ -1,0 +1,51 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$header = $variables['page']['header'];
+	$content = $this->property($variables['page']['obj'], 'content');
+} ?>
+<section class="article">
+	<div class="container">
+		<div class="inner">
+			<div class="article-container">
+				<h1 class="article-header"><?= $header ?></h1>
+				<div class="article-content"><?= $this->parseWysiwig($content, $this) ?></div>
+
+					<div class="timetables">
+						<?php {
+							$clinics = $this->macros('content', 'menu', [null, 1, 'kontakty']);
+							$clinics = $this->parseData($clinics);
+							$clinics = isset($clinics['items']) ? $clinics['items'] : [];
+						} ?>
+
+						<?php foreach($clinics as $clinic): ?>
+							<?php {
+								$clinicPage = $this->getPageById($clinic['id']);
+
+								$h1 = $clinicPage->getValue('h1');
+								$timetableObj = $clinicPage->getValue('timetable');
+
+								if(!isset($timetableObj) || empty($timetableObj)){
+									continue;
+								}
+
+								$timetable['filepath'] = $timetableObj->getFilePath(true);
+								$timetable['size'] = $timetableObj->getSize();
+								$timetable['name'] = $timetableObj->getFileName();
+
+								$timetable = $timetable;
+								$timetable['title'] = $h1;
+							} ?>
+
+							<div class="clinic-timetable mb-5 p-0">
+								<?= $this->render($timetable, 'utils/file'); ?>
+							</div>
+
+						<?php endforeach; ?>
+					</div>
+
+			</div>
+		</div>
+	</div>
+</section>

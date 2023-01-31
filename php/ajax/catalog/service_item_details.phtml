@@ -1,0 +1,31 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+	$pageId = (int) $variables['page_id'];
+
+	$items = $this->parseData($this->macros('catalog', 'getSmartCatalog', [null, $pageId, 99999, true, 1, false, true], ['descr']));
+	// $this->dump($items);
+
+	if(!(isset($items['lines']) && count($items['lines']))){
+		return;
+	}
+} ?>
+
+<?php foreach($items['lines'] as $item): ?>
+	<div class="prices-detail">
+		<div class="prices-detail-title"><?= $item['text'] ?>
+			<?php if(isset($item['price']) && $item['price'] > 0): ?>
+				<span>&nbsp;—&nbsp;<b><?= $item['price'] ?></b>&nbsp;руб.</span>
+			<?php endif; ?>
+		</div>
+		<?php if(isset($item['properties']) && isset($item['properties']['descr']) && !empty($item['properties']['descr'])): ?>
+			<?php {
+				$descr = preg_replace('/[Ё]/u', 'Е', $item['properties']['descr']);
+			} ?>
+			<div class="prices-detail-descr"><?= $this->parseWysiwig($descr, $this) ?></div>
+		<?php endif; ?>
+	</div>
+<?php endforeach; ?>
+
+

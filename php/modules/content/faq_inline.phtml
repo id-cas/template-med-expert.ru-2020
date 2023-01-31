@@ -1,0 +1,69 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $this->parseData($variables);
+
+	$groupsItems = isset($variables['items']) ? $variables['items'] : [];
+	if(!(is_array($groupsItems) && count($groupsItems))){
+		return;
+	}
+
+	$ldItems = [];
+}?>
+
+<?php foreach($groupsItems as $groupsItem): ?>
+	<?php {
+		$groupId = $groupsItem['id'];
+		$groupPage = $this->getPageById($groupId);
+		$groupH1 = $this->property($groupPage, 'h1');
+
+		$faq = $this->parseData($this->macros('content', 'faq_inline', [null, 1,$groupId ]));
+		$items = isset($faq['items']) ? $faq['items'] : [];
+		if(!(is_array($items) && count($items))){
+			return;
+		}
+	}?>
+	<div class="faq">
+		<div class="faq-name"><?= $groupH1 ?></div>
+		<div class="faq-questions">
+			<?php foreach($items as $item): ?>
+				<?php {
+					$itemPage = $this->getPageById($item['id']);
+					$question = $this->parseWysiwig($this->property($itemPage, 'h1'), $this);;
+					$answer = $this->parseWysiwig($this->property($itemPage, 'content'), $this);;
+
+					$ldItems[] = [
+						"@type" => "Question",
+						"name" =>  $question,
+						"acceptedAnswer" => [
+							"@type" => "Answer",
+							"text" => $answer
+						]
+					];
+				} ?>
+				<div class="faq-item">
+					<button type="button" class="faq-item-question js--faq-btn">
+						<?= $question; ?>
+					</button>
+					<div class="faq-item-reply">
+						<?= $answer; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	</div>
+<?php endforeach; ?>
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": <?= json_encode($ldItems, JSON_UNESCAPED_UNICODE); ?>
+    }
+    </script>
+
+
+
+
+
+

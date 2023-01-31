@@ -1,0 +1,37 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$items = (isset($variables['items']) && is_array($variables['items']) && count($variables['items'])) ? $variables['items'] : [];
+} ?>
+
+<div class="clinic-tabs-wrap">
+	<?php foreach($items as $item): ?>
+		<?php if(isset($item['is_active']) && $item['is_active'] === true): ?>
+			<div class="clinic-tabs-mob">
+				<div class="clinic-tabs-mob-ico">
+					<img src="<?= $item['icon'] ?>" alt="ico">
+				</div>
+				<span><?= $item['name'] ?></span>
+				<img src="/resources/images/chevron-down.svg" alt="ico">
+			</div>
+			<?php break; ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
+
+	<ul class="clinic-tabs">
+		<?php foreach($items as $item): ?>
+			<li class="tab-link<?= (isset($item['is_active']) && $item['is_active'] === true) ? ' active' : ''; ?>" tab-id="<?= $item['id'] ?>" tab-category="clinic-tab-content">
+				<div>
+					<img src="<?= $item['icon'] ?>" alt="ico">
+					<span><?= $item['name'] ?></span>
+				</div>
+			</li>
+		<?php endforeach; ?>
+	</ul>
+</div>
+
+<div class="clinic-main">
+	<?php foreach($items as $item): ?>
+		<div class="clinic-tab-content<?= (isset($item['is_active']) && $item['is_active'] === true) ? ' active' : ''; ?>" id="<?= $item['id'] ?>"><?= $item['content'] ?></div>
+	<?php endforeach; ?>
+</div>

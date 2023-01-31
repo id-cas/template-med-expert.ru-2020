@@ -1,0 +1,60 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$items = $variables;
+
+	// Создадим ассоциативный массив Брен -> Параметры бренда
+	$itemsByName = [];
+	foreach($items as $item){
+		$itemsByName[$item['text']] = $item;
+	}
+
+	// Отсортируем массив по алфавиту
+	ksort($itemsByName);
+
+	// $this->dump($itemsByName);
+} ?>
+
+<div class="row brands__row">
+	<?php
+		$prevKeyFirstChar = null;
+		$tagIsOpen = false;
+
+		foreach($itemsByName as $key => $item): ?>
+
+			<?php {
+				$currKeyFirstChar = mb_strtolower(mb_substr($key, 0, 1));
+				$properties = $item['properties'];
+
+				$brandLink = '/catalog/?filter%5Btrade_mark%5D%5B%5D='. preg_replace('/\s/', '+', $item['text']);
+			} ?>
+
+			<?php if($currKeyFirstChar !== $prevKeyFirstChar && $tagIsOpen === true): ?>
+				</div>
+			<?php $tagIsOpen = false; endif; ?>
+
+			<?php if($currKeyFirstChar !== $prevKeyFirstChar && $tagIsOpen === false): ?>
+				<div class="cell cell--X12 cell--S6 cell--M4 cell--L3 brands__col">
+					<div class="row">
+						<div class="cell cell--X12 cell--padding-vertical cell--X-text-center brands__char"><?= mb_strtoupper($currKeyFirstChar); ?></div>
+					</div>
+			<?php $tagIsOpen = true; endif; ?>
+
+			<div class="row">
+				<div class="cell cell--X12 cell--padding-vertical cell--X-text-center">
+					<a class="brands__item" href="#" onclick="event.preventDefault(); window.location='<?= $brandLink ?>'; return false;">
+						<?= $this->render([
+							'class' => 'responsive',
+							'src' => $properties['header_pic']['src'],
+							'alt' => $item['text'],
+							'width' => 210,
+							'height' => 80,
+							'background' => 'transparent',
+						], 'utils/thumb' ); ?>
+					</a>
+				</div>
+			</div>
+
+	<?php $prevKeyFirstChar = $currKeyFirstChar; endforeach; ?>
+</div>

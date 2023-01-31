@@ -1,0 +1,32 @@
+<?php /** @var umiTemplaterPHP $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+    $variables = $this->parseData($variables);
+
+	$position = 1;
+	$items = [];
+	if (isset($variables["items"]) && count($variables["items"])) {
+		foreach ($variables["items"] as $i => $item) {
+			array_push($items, [
+				'@type' => 'ListItem',
+				'position' => $position,
+				'item' => [
+					'@id' => $this->macros('custom', 'getCanonicalLink', [$item['id']]),
+					'name' => $item['text']
+				]
+			]);
+
+			$position++;
+		}
+	}
+
+	$jsonLD = [
+		'@context' => 'https://schema.org',
+		'@type' => 'BreadcrumbList',
+		'itemListElement' => $items
+	];
+} ?>
+
+<?php if (count($items)): ?>
+	<script type="application/ld+json"><?= json_encode($jsonLD, true) ?></script>
+<?php endif; ?>

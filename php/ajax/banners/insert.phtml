@@ -1,0 +1,9 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$variables = $_GET;
+	$pageId = (int) $variables['page_id'];
+	$position = $variables['position'];
+} ?>
+
+<?= $this->render($this->macros('banners', 'multipleRandInsert', [$pageId, $position, 2]), 'modules/banners/insert'); ?>

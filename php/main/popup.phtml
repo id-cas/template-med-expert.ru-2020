@@ -1,0 +1,39 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+<?php {
+	$scope = $this->getScopeVars();
+	$variables = $this->parseData( $variables );
+} ?>
+
+<div class="popup" id="popup-developers">
+	<div class="popup-inner">
+		<div class="popup-close">
+			<img src="/resources/images/popup-close.svg" alt="ico">
+		</div>
+		<div class="popup-top">
+			<img src="/resources/images/quest-answer.svg" alt="ico">
+			<div class="popup-title">Написать разработчикам сайта</div>
+		</div>
+		<div class="popup-main">
+			<div class="popup-info">
+				<div class="popup-info-title">Форма для отравки сообщений</div>
+				<p>Через эту форму вы можете сообщить: об ошибках в работе сайта, написать предложение по улучшению функционала, оставить отзыв.</p>
+			</div>
+			<form class="popup-form webform" enctype="multipart/form-data" method="post" action="/webforms/send/">
+				<input type="text" placeholder="Ваше имя" name="data[new][full_name]">
+				<input type="text" placeholder="E-mail для ответа" name="data[new][email]">
+				<input type="text" placeholder="Номер телефона" name="data[new][phone]">
+				<textarea placeholder="Сообщение" name="data[new][message]"></textarea>
+				<?php if(isset($scope['G-RECAPTCHA'])): ?>
+					<?php echo $this->render( $scope, "modules/data/form_field_recaptcha" ); ?>
+				<?php endif; ?>
+				<input type="hidden" name="system_email_to" value="754">
+				<input type="hidden" name="system_form_id" value="137">
+				<input type="hidden" name="ref_onsuccess" value="/webforms/posted/137/">
+
+				<button type="submit">Отправить</button>
+			</form>
+			<div class="popup-form-agreement">Отправляя данные через форму, вы подтверждаете, что согласны на обработку персональных данных и принимаете <a href="/agreement/" rel="nofollow,noindex">Политику конфиденциальности</a>.</div>
+		</div>
+	</div>
+</div>

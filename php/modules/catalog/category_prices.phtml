@@ -1,0 +1,23 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$services = $this->parseData($this->macros('catalog', 'getCategoryList', [null, $variables['page']['id'], 99999, true]));
+	// $this->dump($services);
+	list($h1, $descr) = $this->properties($variables['page']['obj'], ['h1', 'descr']);
+} ?>
+
+<section class="article pb-0">
+	<div class="container">
+		<div class="inner">
+			<div class="article-container">
+				<h1 class="article-header"><?= $h1 ?></h1>
+				<div class="article-content"><?= $this->parseWysiwig($descr, $this) ?></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="prices">
+	<?php echo $this->render($services, 'modules/catalog/services') ?>
+</section>

@@ -1,0 +1,56 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	// Меню
+	$menu = $this->parseData($this->macros('menu', 'draw', ['header']));
+} ?>
+
+<ul class="header-nav">
+	<?php foreach($menu['item'] as $item): ?>
+		<?php {
+			list($name, $img) = explode(';', $item['text']);
+		}?>
+
+		<?php if(!in_array(mb_strtolower(trim($name)), ['еще', 'ещё'])): ?>
+			<li>
+				<?php if($variables['request-uri'] !== $item['link']): ?>
+					<a class="header-nav-link" href="<?= $item['link'] ?>">
+						<img src="<?= $img ?>" alt="ico">
+						<span><?= $name ?></span>
+					</a>
+				<?php else: ?>
+					<span class="header-nav-link active">
+						<img src="<?= $img ?>" alt="ico">
+						<span><?= $name ?></span>
+					</span>
+				<?php endif; ?>
+			</li>
+		<?php else: ?>
+			<li>
+				<div class="header-nav-more">
+					<div class="header-nav-more-btn">
+						<img src="<?= $img ?>" alt="ico">
+						<span><?= $name ?></span>
+					</div>
+
+					<div class="header-nav-more-dropdown">
+						<div class="title"><?= $name ?></div>
+						<ul>
+							<?php foreach($item['items'] as $subitem): ?>
+								<li>
+									<?php if($variables['request-uri'] !== $subitem['link']): ?>
+										<a class="header-nav-more-link" href="<?= $subitem['link'] ?>"><?= $subitem['name'] ?></a>
+									<?php else: ?>
+										<span class="header-nav-more-link active"><?= $subitem['name'] ?></span>
+									<?php endif; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+			</li>
+		<?php endif; ?>
+
+	<?php endforeach; ?>
+</ul>

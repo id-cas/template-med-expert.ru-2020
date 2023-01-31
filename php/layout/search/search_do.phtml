@@ -1,0 +1,18 @@
+<?php /** @var CwrkExtensions $this */ ?>
+<?php /** @var array $variables */ ?>
+
+<?php {
+	$params = json_encode([
+		'search_string' => getRequest('search_string'),
+	], JSON_UNESCAPED_UNICODE);
+	$params = htmlentities($params);
+}?>
+
+<section class="prices" id="js--search-result">
+	<div class="container">
+		<div class="s-title">Результаты поиска</div>
+	</div>
+	<div class="container js--items-scope">
+		<div class="lazy-html lazy-html--init" data-path="search/search_items" data-params="<?= $params ?>"></div>
+	</div>
+</section>
